@@ -187,6 +187,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
     <div class="sidebar-label">Protection</div>
     <div class="sidebar-item" data-page="antinuke">Anti-Nuke</div>
     <div class="sidebar-item" data-page="whitelist">Whitelist</div>
+    <div class="sidebar-item" data-page="blacklist">Blacklist</div>
     <div class="sidebar-label">Logging</div>
     <div class="sidebar-item" data-page="logging">Logging</div>
     <div class="sidebar-item" data-page="joinleave">Join / Leave</div>
@@ -394,6 +395,17 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
         </div>
       </div>
 
+      <!-- BLACKLIST -->
+      <div class="panel-page" id="page-blacklist">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Blacklist</span></div>
+          <div class="card-body">
+            <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="bl-add" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="bl-add-btn">Add</button></div>
+            <div id="bl-list" style="padding:0 18px 4px"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- LOGGING -->
       <div class="panel-page" id="page-logging">
         <div class="grid grid-2">
@@ -469,9 +481,17 @@ let authed=false;
 async function checkAuth(){
   try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();
     if(d.authenticated){authed=true;$('nav-auth').textContent='Dashboard';$('nav-auth').onclick=()=>location.href='dashboard.html'}
-    else{$('nav-auth').textContent='Login';$('nav-auth').onclick=()=>location.href='login.html'}
-  }catch(e){$('nav-auth').textContent='Login';$('nav-auth').onclick=()=>location.href='login.html'}
+    else{window.location.href='login.html';return false}
+  }catch(e){window.location.href='login.html';return false}
+  return true;
 }
+
+setInterval(async()=>{
+  if(!authed)return;
+  try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();
+    if(!d.authenticated){window.location.href='login.html'}
+  }catch(e){}
+},30000);
 
 $$('.sidebar-item').forEach(function(el){
   el.addEventListener('click',function(){
@@ -564,6 +584,21 @@ async function removeWl(uid){
 $('wl-add-std-btn').addEventListener('click',function(){addWl('standard')});
 $('wl-add-leg-btn').addEventListener('click',function(){addWl('legacy')});
 
+function renderBl(ids){
+  var c=$('bl-list');
+  if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users blacklisted</div>';return}
+  c.innerHTML=ids.map(function(uid){return '<div class="wl-user"><span class="uid">'+uid+'</span><span class="remove" data-uid="'+uid+'">&times;</span></div>'}).join('');
+  $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeBl(this.getAttribute('data-uid'))})});
+}
+async function addBl(){
+  var input=$('bl-add');var uid=input.value.trim();if(!uid)return;
+  try{var r=await fetch('/api/blacklist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'add',user_id:uid})});var d=await r.json();if(d.success){input.value='';loadSettings();showToast('Added')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
+}
+async function removeBl(uid){
+  try{var r=await fetch('/api/blacklist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'remove',user_id:String(uid)})});var d=await r.json();if(d.success){loadSettings();showToast('Removed')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
+}
+$('bl-add-btn').addEventListener('click',function(){addBl()});
+
 function addLine(text,type){var l=document.createElement('div');l.className='line'+(type?' '+type:'');l.textContent=text;$('console-output').appendChild(l);$('console-output').scrollTop=$('console-output').scrollHeight}
 function addHTML(html){var d=document.createElement('div');d.className='line';d.innerHTML=html;$('console-output').appendChild(d);$('console-output').scrollTop=$('console-output').scrollHeight}
 $('console-run-btn').addEventListener('click',function(){
@@ -626,6 +661,7 @@ async function loadSettings(){
 
     renderWl('wl-std-list',d.whitelist_standard||[]);
     renderWl('wl-leg-list',d.whitelist_legacy||[]);
+    renderBl(d.blacklist||[]);
   }catch(e){console.error(e)}
 }
 

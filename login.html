@@ -241,11 +241,11 @@
     <form onsubmit="login(event)">
       <div class="form-group">
         <label class="form-label">Username</label>
-        <input class="form-input" type="text" id="username" placeholder="Enter username" autocomplete="off">
+        <input class="form-input" type="text" id="user_id" placeholder="Enter your username" autocomplete="off">
       </div>
       <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="password" placeholder="Enter password">
+        <label class="form-label">Access Key</label>
+        <input class="form-input" type="text" id="key" placeholder="Enter access key" autocomplete="off" style="text-transform:uppercase">
       </div>
       <button class="login-btn" type="submit">Login</button>
     </form>
@@ -292,8 +292,8 @@ fetch('/api/session', { credentials: 'include' }).then(r => r.json()).then(data 
 
 async function login(e) {
   e.preventDefault();
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
+  const uid = document.getElementById('user_id').value;
+  const key = document.getElementById('key').value;
   document.getElementById('error').style.display = 'none';
 
   try {
@@ -301,7 +301,7 @@ async function login(e) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ username: user, password: pass })
+      body: JSON.stringify({ user_id: uid, key: key })
     });
     const data = await res.json();
     if (data.success) {
