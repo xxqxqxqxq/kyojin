@@ -13,6 +13,17 @@ body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-fon
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes auroraShift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-3%,2%) scale(1.05)}100%{transform:translate(2%,-1%) scale(.98)}}
 @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(74,222,128,.5)}50%{transform:scale(1.3);box-shadow:0 0 14px rgba(74,222,128,.7)}}
+@keyframes loadSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes loadBar{0%{width:0}100%{width:100%}}
+@keyframes loadFadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+/* LOADING SCREEN */
+.loading-screen{position:fixed;inset:0;z-index:9999;background:#060510;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease,transform .4s ease}
+.loading-screen.done{opacity:0;transform:scale(1.02);pointer-events:none}
+.loading-icon{width:48px;height:48px;border-radius:50%;border:2px solid rgba(168,216,234,.1);border-top-color:#a8d8ea;animation:loadSpin .8s linear infinite;margin-bottom:16px}
+.loading-text{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(168,216,234,.4);margin-bottom:20px}
+.loading-bar{width:200px;height:2px;background:rgba(255,255,255,.04);border-radius:99px;overflow:hidden}
+.loading-bar-fill{height:100%;background:linear-gradient(90deg,transparent,#a8d8ea,transparent);animation:loadBar 1.2s ease-in-out infinite;border-radius:99px}
 
 .aurora{position:fixed;top:-40%;left:-20%;width:140%;height:140%;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 70% 10%,rgba(168,216,234,.08) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 20% 80%,rgba(120,180,220,.06) 0%,transparent 55%),radial-gradient(ellipse 45% 40% at 90% 90%,rgba(168,216,234,.04) 0%,transparent 55%);animation:auroraShift 20s ease-in-out infinite alternate}
 canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
@@ -35,8 +46,8 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .panel-area{flex:1;overflow-y:auto;padding:14px}
-.panel-page{display:none;animation:slideUp .2s ease-out}
-.panel-page.active{display:block}
+.panel-page{display:none}
+.panel-page.active{display:block;animation:slideUp .25s ease-out}
 
 .card{border-radius:10px;background:rgba(10,10,16,.65);border:1px solid rgba(168,216,234,.04);backdrop-filter:blur(10px);transition:border-color .2s}
 .card:hover{border-color:rgba(168,216,234,.1)}
@@ -45,7 +56,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .card-body{padding:6px 12px;display:flex;flex-direction:column;gap:0}
 
 .cat-tabs{display:flex;gap:4px;padding:10px 0 8px;flex-wrap:wrap}
-.cat-tab{padding:5px 12px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22);cursor:pointer;border-radius:20px;transition:all .2s;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)}
+.cat-tab{padding:5px 12px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22);cursor:pointer;border-radius:20px;transition:all .2s;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);user-select:none}
 .cat-tab:hover{color:rgba(255,255,255,.4);background:rgba(168,216,234,.04);border-color:rgba(168,216,234,.08)}
 .cat-tab.active{color:#a8d8ea;background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.15)}
 .cat-content{display:none;animation:fadeIn .15s ease-out}
@@ -81,7 +92,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .console-run:hover{background:rgba(168,216,234,.14)}
 
 .punish-select{display:flex;gap:3px}
-.punish-btn{padding:3px 8px;font-size:9px;font-weight:600;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.2);color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;transition:all .15s;letter-spacing:.5px;text-transform:uppercase}
+.punish-btn{padding:3px 8px;font-size:9px;font-weight:600;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.2);color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;transition:all .15s;letter-spacing:.5px;text-transform:uppercase;user-select:none}
 .punish-btn:hover{border-color:rgba(168,216,234,.15)}
 .punish-btn.active{background:rgba(168,216,234,.1);border-color:rgba(168,216,234,.2);color:#a8d8ea}
 
@@ -102,6 +113,13 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 </style>
 </head>
 <body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loading-screen">
+  <div class="loading-icon"></div>
+  <div class="loading-text">Loading Dashboard</div>
+  <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+</div>
 
 <div class="aurora"></div>
 <canvas id="particles"></canvas>
@@ -136,6 +154,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
   <div class="main">
     <div class="panel-area">
 
+      <!-- CONSOLE -->
       <div class="panel-page active" id="page-console">
         <div class="console">
           <div class="console-output" id="console-output">
@@ -145,17 +164,18 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           </div>
           <div class="console-input-row">
             <input class="console-input" id="console-input" placeholder="Enter command..." autocomplete="off">
-            <button class="console-run" onclick="runCommand()">Run</button>
+            <button class="console-run" id="console-run-btn">Run</button>
           </div>
         </div>
       </div>
 
+      <!-- SETTINGS -->
       <div class="panel-page" id="page-settings">
         <div class="grid grid-2">
           <div class="card"><div class="card-header"><span class="card-title">General</span></div><div class="card-body">
             <div class="row"><span class="row-label">Prefix</span><input class="input" style="width:50px;text-align:center" id="s-prefix" value=","></div>
-            <div class="row"><span class="row-label">Guild ID</span><span class="row-value" id="s-guild-id">—</span></div>
-            <div class="row"><span class="row-label">Members</span><span class="row-value" id="s-members">—</span></div>
+            <div class="row"><span class="row-label">Guild ID</span><span class="row-value" id="s-guild-id">&mdash;</span></div>
+            <div class="row"><span class="row-label">Members</span><span class="row-value" id="s-members">&mdash;</span></div>
           </div></div>
           <div class="card"><div class="card-header"><span class="card-title">Roles</span></div><div class="card-body">
             <div class="row"><span class="row-label">Verify Role</span><input class="input" style="width:150px" id="s-verify-role" placeholder="Role ID"></div>
@@ -169,11 +189,10 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
         <div class="card" style="margin-bottom:10px">
           <div class="card-header"><span class="card-title">Global</span></div>
           <div class="card-body">
-            <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-enabled" onclick="toggleSetting(this,'antinuke.enabled')"><span></span></div></div>
+            <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-enabled"><span></span></div></div>
             <div class="row"><span class="row-label">Window (seconds)</span><input class="input" style="width:60px;text-align:center" id="an-window" value="30"></div>
           </div>
         </div>
-
         <div class="cat-tabs" id="an-tabs">
           <div class="cat-tab active" data-cat="webhook">Webhook</div>
           <div class="cat-tab" data-cat="ping">Ping</div>
@@ -184,53 +203,44 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           <div class="cat-tab" data-cat="audit">Audit</div>
           <div class="cat-tab" data-cat="lockdown">Lockdown</div>
         </div>
-
-        <!-- Each category has its own card with the right event keys -->
         <div class="cat-content active" data-cat="webhook"><div class="card"><div class="card-header"><span class="card-title">Webhook Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="webhook_create" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="webhook_create"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="webhook_create" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="ping"><div class="card"><div class="card-header"><span class="card-title">Ping Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="mass_ping" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="mass_ping"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="mass_ping" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
           <div class="row"><span class="row-label">Channel Whitelist</span><input class="input" style="width:150px" id="an-ping-channels" placeholder="Channel IDs"></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="channels"><div class="card"><div class="card-header"><span class="card-title">Channel Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="channel_delete" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="channel_delete"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="channel_delete" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="roles"><div class="card"><div class="card-header"><span class="card-title">Role Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="role_delete" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="role_delete"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="role_delete" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="bans"><div class="card"><div class="card-header"><span class="card-title">Ban Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="ban" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="ban"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="ban" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="kicks"><div class="card"><div class="card-header"><span class="card-title">Kick Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="kick" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="kick"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="kick" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="audit"><div class="card"><div class="card-header"><span class="card-title">Audit Protection</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="audit_change" onclick="toggleEvt(this)"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
-          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
         </div></div></div>
-
         <div class="cat-content" data-cat="lockdown"><div class="card"><div class="card-header"><span class="card-title">Mass-Ban Lockdown</span></div><div class="card-body">
-          <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-lockdown" onclick="toggleSetting(this,'antinuke.massban_lockdown.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-lockdown"><span></span></div></div>
           <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" id="an-lockdown-th" value="3"></div>
           <div class="row"><span class="row-label">Access Role ID</span><input class="input" style="width:150px" id="an-lockdown-role" placeholder="Role ID"></div>
         </div></div></div>
@@ -240,11 +250,11 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
       <div class="panel-page" id="page-whitelist">
         <div class="grid grid-2">
           <div class="card"><div class="card-header"><span class="card-title">Standard Whitelist</span></div><div class="card-body">
-            <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:5px 10px;font-size:9px" onclick="addWhitelist('standard')">Add</button></div>
+            <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:5px 10px;font-size:9px" id="wl-add-std-btn">Add</button></div>
             <div id="wl-std-list"></div>
           </div></div>
           <div class="card"><div class="card-header"><span class="card-title">Legacy Whitelist</span></div><div class="card-body">
-            <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:5px 10px;font-size:9px" onclick="addWhitelist('legacy')">Add</button></div>
+            <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:5px 10px;font-size:9px" id="wl-add-leg-btn">Add</button></div>
             <div id="wl-leg-list"></div>
           </div></div>
         </div>
@@ -257,10 +267,10 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
             <div class="row"><span class="row-label">Log Channel</span><input class="input" style="width:150px" id="log-channel" placeholder="Channel ID"></div>
           </div></div>
           <div class="card"><div class="card-header"><span class="card-title">Events</span></div><div class="card-body">
-            <div class="row"><span class="row-label">Bot Commands</span><div class="toggle" id="log-bot-commands" onclick="toggleSetting(this,'logging_events.bot_commands')"><span></span></div></div>
-            <div class="row"><span class="row-label">Anti-Nuke</span><div class="toggle on" id="log-antinuke" onclick="toggleSetting(this,'logging_events.antinuke')"><span></span></div></div>
-            <div class="row"><span class="row-label">Moderation</span><div class="toggle on" id="log-moderation" onclick="toggleSetting(this,'logging_events.moderation')"><span></span></div></div>
-            <div class="row"><span class="row-label">Audit Changes</span><div class="toggle" id="log-audit" onclick="toggleSetting(this,'logging_events.audit_change')"><span></span></div></div>
+            <div class="row"><span class="row-label">Bot Commands</span><div class="toggle" id="log-bot-commands"><span></span></div></div>
+            <div class="row"><span class="row-label">Anti-Nuke</span><div class="toggle on" id="log-antinuke"><span></span></div></div>
+            <div class="row"><span class="row-label">Moderation</span><div class="toggle on" id="log-moderation"><span></span></div></div>
+            <div class="row"><span class="row-label">Audit Changes</span><div class="toggle" id="log-audit"><span></span></div></div>
           </div></div>
         </div>
       </div>
@@ -272,13 +282,13 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
             <div class="row"><span class="row-label">Channel</span><input class="input" style="width:150px" id="jl-join-ch" placeholder="Channel ID"></div>
             <div class="row"><span class="row-label">Message</span><input class="input" id="jl-join-msg" placeholder="Welcome {mention} to {server}!"></div>
             <div class="row"><span class="row-label">GIF URL</span><input class="input" id="jl-join-gif" placeholder="https://..."></div>
-            <img class="gif-preview" id="jl-join-preview" src="" alt="Join GIF preview" style="display:none">
+            <img class="gif-preview" id="jl-join-preview" src="" alt="Join GIF" style="display:none">
           </div></div>
           <div class="card"><div class="card-header"><span class="card-title">Leave</span></div><div class="card-body">
             <div class="row"><span class="row-label">Channel</span><input class="input" style="width:150px" id="jl-leave-ch" placeholder="Channel ID"></div>
             <div class="row"><span class="row-label">Message</span><input class="input" id="jl-leave-msg" placeholder="{user} left {server}."></div>
             <div class="row"><span class="row-label">GIF URL</span><input class="input" id="jl-leave-gif" placeholder="https://..."></div>
-            <img class="gif-preview" id="jl-leave-preview" src="" alt="Leave GIF preview" style="display:none">
+            <img class="gif-preview" id="jl-leave-preview" src="" alt="Leave GIF" style="display:none">
           </div></div>
         </div>
       </div>
@@ -290,153 +300,222 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 <div class="toast" id="toast">Saved</div>
 
 <script>
-// PARTICLES
-const cvs=document.getElementById('particles'),ctx=cvs.getContext('2d');let W,H,parts=[],mouse={x:-9999,y:-9999};
-function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}resize();addEventListener('resize',resize);addEventListener('mousemove',e=>{mouse={x:e.clientX,y:e.clientY}});
+// ===== PARTICLES =====
+const cvs=document.getElementById('particles'),ctx=cvs.getContext('2d');
+let W,H,parts=[],mouse={x:-9999,y:-9999};
+function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}
+resize();addEventListener('resize',resize);
+addEventListener('mousemove',e=>{mouse={x:e.clientX,y:e.clientY}});
 class P{constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.2+.4}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<180){const f=(180-d)/180*.015;this.vx-=dx*f*.01;this.vy-=dy*f*.01}}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba(168,216,234,.35)';ctx.fill()}}
 for(let i=0;i<60;i++)parts.push(new P);
-function anim(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw()});for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){const dx=parts[i].x-parts[j].x,dy=parts[i].y-parts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(parts[i].x,parts[i].y);ctx.lineTo(parts[j].x,parts[j].y);ctx.strokeStyle=`rgba(168,216,234,${(1-d/120)*.15})`;ctx.lineWidth=.4;ctx.stroke()}}requestAnimationFrame(anim)}anim();
+function anim(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw()});for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){const dx=parts[i].x-parts[j].x,dy=parts[i].y-parts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(parts[i].x,parts[i].y);ctx.lineTo(parts[j].x,parts[j].y);ctx.strokeStyle=`rgba(168,216,234,${(1-d/120)*.15})`;ctx.lineWidth=.4;ctx.stroke()}}requestAnimationFrame(anim)}
+anim();
 
-// AUTH
-let authed=false;
-async function checkAuth(){try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();if(d.authenticated){authed=true;document.getElementById('nav-auth').textContent='Dashboard';document.getElementById('nav-auth').onclick=()=>window.location.href='dashboard.html';loadSettings()}else{document.getElementById('nav-auth').textContent='Login';document.getElementById('nav-auth').onclick=()=>window.location.href='login.html'}}catch(e){document.getElementById('nav-auth').textContent='Login';document.getElementById('nav-auth').onclick=()=>window.location.href='login.html'}}
-checkAuth();
-
-// SIDEBAR NAV
-document.querySelectorAll('.sidebar-item').forEach(el=>{el.addEventListener('click',()=>{const page=el.dataset.page;document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));document.querySelectorAll('.panel-page').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('page-'+page).classList.add('active')})});
-
-// CATEGORY TABS
-document.querySelectorAll('.cat-tabs').forEach(bar=>{bar.querySelectorAll('.cat-tab').forEach(tab=>{tab.addEventListener('click',()=>{bar.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active'));const page=bar.closest('.panel-page');page.querySelectorAll('.cat-content').forEach(c=>c.classList.remove('active'));const target=page.querySelector('.cat-content[data-cat="'+tab.dataset.cat+'"]');if(target)target.classList.add('active')})})});
-
-// TOAST
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
-
+// ===== HELPERS =====
+function $(id){return document.getElementById(id)}
+function $$(sel,root){return(root||document).querySelectorAll(sel)}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 function setToggle(el,on){if(!el)return;if(on)el.classList.add('on');else el.classList.remove('on')}
+function isOn(el){return el.classList.contains('on')}
 
-// LOAD SETTINGS
+// ===== TOAST =====
+let saveTimer=null;
+function save(key,val){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value:val})});showToast('Saved')}catch(e){showToast('Error')}},400)}
+
+// ===== AUTH =====
+let authed=false;
+async function checkAuth(){
+  try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();
+    if(d.authenticated){authed=true;$('nav-auth').textContent='Dashboard';$('nav-auth').onclick=()=>location.href='dashboard.html'}
+    else{$('nav-auth').textContent='Login';$('nav-auth').onclick=()=>location.href='login.html'}
+  }catch(e){$('nav-auth').textContent='Login';$('nav-auth').onclick=()=>location.href='login.html'}
+}
+
+// ===== SIDEBAR NAVIGATION =====
+$$('.sidebar-item').forEach(function(el){
+  el.addEventListener('click',function(){
+    var page=this.getAttribute('data-page');
+    $$('.sidebar-item').forEach(function(i){i.classList.remove('active')});
+    $$('.panel-page').forEach(function(p){p.classList.remove('active')});
+    this.classList.add('active');
+    var target=$('page-'+page);
+    if(target)target.classList.add('active');
+  });
+});
+
+// ===== CATEGORY TABS (antinuke) =====
+$$('.cat-tabs').forEach(function(bar){
+  $$('.cat-tab',bar).forEach(function(tab){
+    tab.addEventListener('click',function(){
+      var cat=this.getAttribute('data-cat');
+      $$('.cat-tab',bar).forEach(function(t){t.classList.remove('active')});
+      this.classList.add('active');
+      var page=bar.closest('.panel-page');
+      $$('.cat-content',page).forEach(function(c){c.classList.remove('active')});
+      var target=page.querySelector('.cat-content[data-cat="'+cat+'"]');
+      if(target)target.classList.add('active');
+    });
+  });
+});
+
+// ===== TOGGLES (global) =====
+$('an-enabled').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.enabled',isOn(this))});
+$('an-window').addEventListener('change',function(){save('antinuke.window_seconds',parseInt(this.value)||30)});
+
+// ===== ANTI-NUKE EVENT TOGGLES =====
+$$('.toggle[data-evt]').forEach(function(el){
+  el.addEventListener('click',function(){
+    this.classList.toggle('on');
+    save('antinuke.events.'+this.getAttribute('data-evt')+'.enabled',isOn(this));
+  });
+});
+
+// ===== ANTI-NUKE THRESHOLD INPUTS =====
+$$('.evt-input').forEach(function(inp){
+  inp.addEventListener('change',function(){
+    save('antinuke.events.'+this.getAttribute('data-evt')+'.threshold',parseInt(this.value)||1);
+  });
+});
+
+// ===== PUNISHMENT BUTTONS =====
+$$('.punish-select[data-evt]').forEach(function(sel){
+  $$('.punish-btn',sel).forEach(function(btn){
+    btn.addEventListener('click',function(){
+      $$('.punish-btn',sel).forEach(function(b){b.classList.remove('active')});
+      this.classList.add('active');
+      save('antinuke.events.'+sel.getAttribute('data-evt')+'.punishment',this.getAttribute('data-val'));
+    });
+  });
+});
+
+// ===== LOCKDOWN =====
+$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this))});
+$('an-lockdown-th').addEventListener('change',function(){save('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)});
+$('an-lockdown-role').addEventListener('change',function(){save('antinuke.massban_lockdown.access_role_id',this.value||null)});
+$('an-ping-channels').addEventListener('change',function(){save('antinuke.ping_channel_whitelist',this.value.split(',').map(function(s){return parseInt(s.trim())}).filter(Boolean))});
+
+// ===== LOGGING =====
+$('log-bot-commands').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.bot_commands',isOn(this))});
+$('log-antinuke').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.antinuke',isOn(this))});
+$('log-moderation').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.moderation',isOn(this))});
+$('log-audit').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.audit_change',isOn(this))});
+$('log-channel').addEventListener('change',function(){save('logging_channel_id',this.value?parseInt(this.value):null)});
+
+// ===== JOIN / LEAVE =====
+$('jl-join-ch').addEventListener('change',function(){save('join_channel_id',this.value?parseInt(this.value):null)});
+$('jl-join-msg').addEventListener('change',function(){save('join_message',this.value)});
+$('jl-join-gif').addEventListener('change',function(){save('join_gif',this.value);previewGif('jl-join-gif','jl-join-preview')});
+$('jl-leave-ch').addEventListener('change',function(){save('leave_channel_id',this.value?parseInt(this.value):null)});
+$('jl-leave-msg').addEventListener('change',function(){save('leave_message',this.value)});
+$('jl-leave-gif').addEventListener('change',function(){save('leave_gif',this.value);previewGif('jl-leave-gif','jl-leave-preview')});
+
+function previewGif(inputId,previewId){
+  var url=$(inputId).value.trim();
+  var img=$(previewId);
+  if(url){img.src=url;img.style.display='block';img.onerror=function(){img.style.display='none'}}
+  else{img.style.display='none'}
+}
+
+// ===== SETTINGS =====
+$('s-prefix').addEventListener('change',function(){save('prefix',this.value||',')});
+
+// ===== WHITELIST =====
+function renderWl(id,users){
+  var c=$(id);
+  if(!users||!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
+  c.innerHTML=users.map(function(uid){return '<div class="wl-user"><span class="uid">'+uid+'</span><span class="remove" data-uid="'+uid+'">&times;</span></div>'}).join('');
+  $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeWl(this.getAttribute('data-uid'))})});
+}
+async function addWl(type){
+  var input=$(type==='standard'?'wl-add-std':'wl-add-leg');
+  var uid=input.value.trim();if(!uid)return;
+  try{var r=await fetch('/api/whitelist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'add',user_id:uid,type:type})});var d=await r.json();if(d.success){input.value='';loadSettings();showToast('Added')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
+}
+async function removeWl(uid){
+  try{var r=await fetch('/api/whitelist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'remove',user_id:String(uid)})});var d=await r.json();if(d.success){loadSettings();showToast('Removed')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
+}
+$('wl-add-std-btn').addEventListener('click',function(){addWl('standard')});
+$('wl-add-leg-btn').addEventListener('click',function(){addWl('legacy')});
+
+// ===== CONSOLE =====
+function addLine(text,type){var l=document.createElement('div');l.className='line'+(type?' '+type:'');l.textContent=text;$('console-output').appendChild(l);$('console-output').scrollTop=$('console-output').scrollHeight}
+function addHTML(html){var d=document.createElement('div');d.className='line';d.innerHTML=html;$('console-output').appendChild(d);$('console-output').scrollTop=$('console-output').scrollHeight}
+$('console-run-btn').addEventListener('click',function(){
+  var cmd=$('console-input').value.trim();if(!cmd)return;
+  addHTML('<span class="prompt">&gt;</span> '+cmd);$('console-input').value='';
+  fetch('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({command:cmd})}).then(function(r){return r.json()}).then(function(d){if(d.output)d.output.split('\n').forEach(function(l){addLine(l)});if(d.error)addLine(d.error,'error')}).catch(function(){addLine('Could not connect to server','error')});
+});
+$('console-input').addEventListener('keydown',function(e){if(e.key==='Enter')$('console-run-btn').click()});
+
+// ===== LOAD SETTINGS =====
 async function loadSettings(){
   if(!authed)return;
-  try{const r=await fetch('/api/settings',{credentials:'include'});const d=await r.json();if(d.error)return;
-    document.getElementById('s-guild-id').textContent=d.guild?.id||'—';
-    document.getElementById('s-members').textContent=d.guild?.member_count||'—';
-    document.getElementById('s-prefix').value=d.prefix||',';
+  try{var r=await fetch('/api/settings',{credentials:'include'});var d=await r.json();if(d.error)return;
+    $('s-guild-id').textContent=d.guild?d.guild.id:'\u2014';
+    $('s-members').textContent=d.guild?d.guild.member_count:'\u2014';
+    $('s-prefix').value=d.prefix||',';
 
-    const an=d.antinuke||{};
-    setToggle(document.getElementById('an-enabled'),an.enabled);
-    document.getElementById('an-window').value=an.window_seconds||30;
+    var an=d.antinuke||{};
+    setToggle($('an-enabled'),an.enabled);
+    $('an-window').value=an.window_seconds||30;
 
-    // Load each event from the actual event keys
-    const ev=an.events||{};
-    document.querySelectorAll('.toggle[data-evt]').forEach(tgl=>{
-      const evtKey=tgl.dataset.evt;
-      const cfg=ev[evtKey];
+    var ev=an.events||{};
+    $$('.toggle[data-evt]').forEach(function(tgl){
+      var k=tgl.getAttribute('data-evt');
+      var cfg=ev[k];
       if(cfg&&typeof cfg==='object')setToggle(tgl,cfg.enabled);
-      else if(cfg===true)setToggle(tgl,true);
       else setToggle(tgl,true);
     });
-    document.querySelectorAll('.evt-input').forEach(inp=>{
-      const evtKey=inp.dataset.evt;
-      const cfg=ev[evtKey];
-      if(cfg&&typeof cfg==='object')inp.value=cfg.threshold??1;
+    $$('.evt-input').forEach(function(inp){
+      var k=inp.getAttribute('data-evt');
+      var cfg=ev[k];
+      if(cfg&&typeof cfg==='object')inp.value=cfg.threshold||1;
       else inp.value=1;
     });
-    document.querySelectorAll('.punish-select[data-evt]').forEach(sel=>{
-      const evtKey=sel.dataset.evt;
-      const cfg=ev[evtKey];
-      const punish=(cfg&&typeof cfg==='object')?(cfg.punishment||'strip'):'strip';
-      sel.querySelectorAll('.punish-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.toLowerCase()===punish)b.classList.add('active')});
+    $$('.punish-select[data-evt]').forEach(function(sel){
+      var k=sel.getAttribute('data-evt');
+      var cfg=ev[k];
+      var punish=(cfg&&typeof cfg==='object')?(cfg.punishment||'strip'):'strip';
+      $$('.punish-btn',sel).forEach(function(b){b.classList.remove('active');if(b.getAttribute('data-val')===punish)b.classList.add('active')});
     });
 
-    document.getElementById('an-ping-channels').value=(an.ping_channel_whitelist||[]).join(', ');
+    $('an-ping-channels').value=(an.ping_channel_whitelist||[]).join(', ');
 
-    const mb=an.massban_lockdown||{};
-    setToggle(document.getElementById('an-lockdown'),mb.enabled);
-    document.getElementById('an-lockdown-th').value=mb.threshold??3;
-    document.getElementById('an-lockdown-role').value=mb.access_role_id||'';
+    var mb=an.massban_lockdown||{};
+    setToggle($('an-lockdown'),mb.enabled);
+    $('an-lockdown-th').value=mb.threshold||3;
+    $('an-lockdown-role').value=mb.access_role_id||'';
 
-    document.getElementById('log-channel').value=d.logging_channel_id||'';
-    const le=d.logging_events||{};
-    setToggle(document.getElementById('log-bot-commands'),le.bot_commands);
-    setToggle(document.getElementById('log-antinuke'),le.antinuke);
-    setToggle(document.getElementById('log-moderation'),le.moderation);
-    setToggle(document.getElementById('log-audit'),le.audit_change);
+    $('log-channel').value=d.logging_channel_id||'';
+    var le=d.logging_events||{};
+    setToggle($('log-bot-commands'),le.bot_commands);
+    setToggle($('log-antinuke'),le.antinuke);
+    setToggle($('log-moderation'),le.moderation);
+    setToggle($('log-audit'),le.audit_change);
 
-    document.getElementById('jl-join-ch').value=d.join_channel_id||'';
-    document.getElementById('jl-join-msg').value=d.join_message||'';
-    document.getElementById('jl-join-gif').value=d.join_gif||'';
-    updateGifPreview('jl-join-gif','jl-join-preview');
-    document.getElementById('jl-leave-ch').value=d.leave_channel_id||'';
-    document.getElementById('jl-leave-msg').value=d.leave_message||'';
-    document.getElementById('jl-leave-gif').value=d.leave_gif||'';
-    updateGifPreview('jl-leave-gif','jl-leave-preview');
+    $('jl-join-ch').value=d.join_channel_id||'';
+    $('jl-join-msg').value=d.join_message||'';
+    $('jl-join-gif').value=d.join_gif||'';
+    previewGif('jl-join-gif','jl-join-preview');
+    $('jl-leave-ch').value=d.leave_channel_id||'';
+    $('jl-leave-msg').value=d.leave_message||'';
+    $('jl-leave-gif').value=d.leave_gif||'';
+    previewGif('jl-leave-gif','jl-leave-preview');
 
-    renderWhitelist('wl-std-list',d.whitelist_standard||[]);
-    renderWhitelist('wl-leg-list',d.whitelist_legacy||[]);
+    renderWl('wl-std-list',d.whitelist_standard||[]);
+    renderWl('wl-leg-list',d.whitelist_legacy||[]);
   }catch(e){console.error(e)}
 }
 
-// SAVE
-let saveTimer=null;
-function saveSetting(key,value){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value})});showToast('Saved')}catch(e){showToast('Error')}},400)}
-
-function toggleSetting(el,key){el.classList.toggle('on');saveSetting(key,el.classList.contains('on'))}
-
-function toggleEvt(el){
-  el.classList.toggle('on');
-  const evtKey=el.dataset.evt;
-  saveSetting('antinuke.events.'+evtKey+'.enabled',el.classList.contains('on'));
-}
-
-function setPunish(el,value){
-  el.parentElement.querySelectorAll('.punish-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  const evtKey=el.parentElement.dataset.evt;
-  saveSetting('antinuke.events.'+evtKey+'.punishment',value);
-}
-
-// WHITELIST
-function renderWhitelist(id,users){
-  const c=document.getElementById(id);
-  if(!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
-  c.innerHTML=users.map(uid=>`<div class="wl-user"><span class="uid">${uid}</span><span class="remove" onclick="removeWhitelist(${uid})">&times;</span></div>`).join('');
-}
-async function addWhitelist(type){
-  const input=document.getElementById(type==='standard'?'wl-add-std':'wl-add-leg');
-  const uid=input.value.trim();if(!uid)return;
-  try{const r=await fetch('/api/whitelist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'add',user_id:uid,type})});const d=await r.json();if(d.success){input.value='';loadSettings();showToast('Added')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
-}
-async function removeWhitelist(uid){
-  try{const r=await fetch('/api/whitelist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'remove',user_id:String(uid)})});const d=await r.json();if(d.success){loadSettings();showToast('Removed')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
-}
-
-// GIF PREVIEW
-function updateGifPreview(inputId,previewId){
-  const url=document.getElementById(inputId).value.trim();
-  const img=document.getElementById(previewId);
-  if(url){img.src=url;img.style.display='block';img.onerror=()=>{img.style.display='none'}}else{img.style.display='none'}
-}
-
-// INPUT LISTENERS
-document.getElementById('an-window').addEventListener('change',function(){saveSetting('antinuke.window_seconds',parseInt(this.value)||30)});
-document.querySelectorAll('.evt-input').forEach(inp=>{inp.addEventListener('change',function(){saveSetting('antinuke.events.'+this.dataset.evt+'.threshold',parseInt(this.value)||1)})});
-document.getElementById('an-lockdown-th').addEventListener('change',function(){saveSetting('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)});
-document.getElementById('an-lockdown-role').addEventListener('change',function(){saveSetting('antinuke.massban_lockdown.access_role_id',this.value||null)});
-document.getElementById('an-ping-channels').addEventListener('change',function(){saveSetting('antinuke.ping_channel_whitelist',this.value.split(',').map(s=>parseInt(s.trim())).filter(Boolean))});
-document.getElementById('log-channel').addEventListener('change',function(){saveSetting('logging_channel_id',this.value?parseInt(this.value):null)});
-document.getElementById('jl-join-ch').addEventListener('change',function(){saveSetting('join_channel_id',this.value?parseInt(this.value):null)});
-document.getElementById('jl-join-msg').addEventListener('change',function(){saveSetting('join_message',this.value)});
-document.getElementById('jl-join-gif').addEventListener('change',function(){saveSetting('join_gif',this.value);updateGifPreview('jl-join-gif','jl-join-preview')});
-document.getElementById('jl-leave-ch').addEventListener('change',function(){saveSetting('leave_channel_id',this.value?parseInt(this.value):null)});
-document.getElementById('jl-leave-msg').addEventListener('change',function(){saveSetting('leave_message',this.value)});
-document.getElementById('jl-leave-gif').addEventListener('change',function(){saveSetting('leave_gif',this.value);updateGifPreview('jl-leave-gif','jl-leave-preview')});
-document.getElementById('s-prefix').addEventListener('change',function(){saveSetting('prefix',this.value||',')});
-
-// CONSOLE
-const output=document.getElementById('console-output'),input=document.getElementById('console-input');
-function addLine(text,type=''){const l=document.createElement('div');l.className='line'+(type?' '+type:'');l.textContent=text;output.appendChild(l);output.scrollTop=output.scrollHeight}
-function addHTML(html){const d=document.createElement('div');d.className='line';d.innerHTML=html;output.appendChild(d);output.scrollTop=output.scrollHeight}
-async function runCommand(){const cmd=input.value.trim();if(!cmd)return;addHTML(`<span class="prompt">&gt;</span> ${cmd}`);input.value='';try{const r=await fetch('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({command:cmd})});const d=await r.json();if(d.output)d.output.split('\n').forEach(l=>addLine(l));if(d.error)addLine(d.error,'error')}catch(e){addLine('Could not connect to server','error')}}
-input.addEventListener('keydown',e=>{if(e.key==='Enter')runCommand()});
+// ===== INIT =====
+checkAuth().then(function(){
+  return loadSettings();
+}).then(function(){
+  setTimeout(function(){
+    $('loading-screen').classList.add('done');
+    setTimeout(function(){$('loading-screen').remove()},500);
+  },800);
+});
 </script>
 </body>
 </html>
