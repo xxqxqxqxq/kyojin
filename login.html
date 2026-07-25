@@ -336,7 +336,7 @@ function pollApproval(id) {
 
   async function check() {
     try {
-      const r = await fetch('/api/approval?id=' + id, { credentials: 'include' });
+      const r = await fetch('/api/approval/' + id, { credentials: 'include' });
       const d = await r.json();
       if (d.status === 'approved') {
         clearInterval(dotTimer);
