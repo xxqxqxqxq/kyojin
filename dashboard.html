@@ -10,17 +10,12 @@
 html,body{height:100%}
 body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-font-smoothing:antialiased;overflow:hidden}
 
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes auroraShift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-3%,2%) scale(1.05)}100%{transform:translate(2%,-1%) scale(.98)}}
 @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(74,222,128,.5)}50%{transform:scale(1.3);box-shadow:0 0 14px rgba(74,222,128,.7)}}
 
-.aurora{position:fixed;top:-40%;left:-20%;width:140%;height:140%;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 60% 50% at 70% 10%,rgba(168,216,234,.08) 0%,transparent 60%),
-  radial-gradient(ellipse 50% 45% at 20% 80%,rgba(120,180,220,.06) 0%,transparent 55%),
-  radial-gradient(ellipse 45% 40% at 90% 90%,rgba(168,216,234,.04) 0%,transparent 55%);
-  animation:auroraShift 20s ease-in-out infinite alternate}
-
+.aurora{position:fixed;top:-40%;left:-20%;width:140%;height:140%;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 70% 10%,rgba(168,216,234,.08) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 20% 80%,rgba(120,180,220,.06) 0%,transparent 55%),radial-gradient(ellipse 45% 40% at 90% 90%,rgba(168,216,234,.04) 0%,transparent 55%);animation:auroraShift 20s ease-in-out infinite alternate}
 canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
 /* NAVBAR */
@@ -50,19 +45,19 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .panel-page.active{display:block}
 
 /* CARDS */
-.card{border-radius:10px;background:rgba(10,10,16,.65);border:1px solid rgba(168,216,234,.04);backdrop-filter:blur(10px);transition:border-color .2s;position:relative;z-index:1}
+.card{border-radius:10px;background:rgba(10,10,16,.65);border:1px solid rgba(168,216,234,.04);backdrop-filter:blur(10px);transition:border-color .2s}
 .card:hover{border-color:rgba(168,216,234,.1)}
-.card-header{display:flex;align-items:center;gap:5px;padding:8px 12px;background:rgba(255,255,255,.012);border-bottom:1px solid rgba(168,216,234,.03);border-radius:10px 10px 0 0}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.012);border-bottom:1px solid rgba(168,216,234,.03);border-radius:10px 10px 0 0}
 .card-title{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(168,216,234,.4)}
 .card-body{padding:6px 12px;display:flex;flex-direction:column;gap:0}
 
-/* SUBTABS */
-.subtabs{display:flex;gap:2px;padding:8px 12px 0;flex-wrap:wrap}
-.subtab{padding:5px 10px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.2);cursor:pointer;border-radius:6px;transition:all .15s;background:transparent;border:1px solid transparent}
-.subtab:hover{color:rgba(255,255,255,.4);background:rgba(168,216,234,.03)}
-.subtab.active{color:#a8d8ea;background:rgba(168,216,234,.06);border-color:rgba(168,216,234,.1)}
-.subpage{display:none;animation:fadeIn .15s ease-out}
-.subpage.active{display:block}
+/* CATEGORY TABS - clean pill style */
+.cat-tabs{display:flex;gap:4px;padding:10px 0 8px;flex-wrap:wrap}
+.cat-tab{padding:5px 12px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22);cursor:pointer;border-radius:20px;transition:all .2s;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)}
+.cat-tab:hover{color:rgba(255,255,255,.4);background:rgba(168,216,234,.04);border-color:rgba(168,216,234,.08)}
+.cat-tab.active{color:#a8d8ea;background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.15)}
+.cat-content{display:none;animation:fadeIn .15s ease-out}
+.cat-content.active{display:block}
 
 /* ROW */
 .row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.02)}
@@ -79,15 +74,6 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 /* INPUT */
 .input{width:100%;padding:6px 8px;background:rgba(0,0,0,.3);border:1px solid rgba(168,216,234,.06);border-radius:5px;color:#ddd;font-size:11px;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .15s}
 .input:focus{border-color:rgba(168,216,234,.25)}
-
-/* SELECT */
-.select{position:relative;min-width:90px}
-.select-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:10px;padding:5px 8px;border-radius:5px;cursor:pointer;background:rgba(0,0,0,.3);border:1px solid rgba(168,216,234,.06);color:rgba(255,255,255,.4);transition:border-color .15s;font-family:'Inter',sans-serif}
-.select-btn:hover{border-color:rgba(168,216,234,.15)}
-.select-menu{position:absolute;top:calc(100% + 3px);left:0;right:0;z-index:60;border-radius:6px;background:rgba(12,12,18,.96);border:1px solid rgba(168,216,234,.08);box-shadow:0 8px 24px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(12px)}
-.select-opt{width:100%;text-align:left;font-size:10px;padding:6px 8px;cursor:pointer;background:transparent;border:none;color:rgba(255,255,255,.35);font-family:'Inter',sans-serif;transition:all .1s}
-.select-opt:hover{background:rgba(168,216,234,.04);color:rgba(255,255,255,.6)}
-.select-opt.active{background:rgba(168,216,234,.08);color:#a8d8ea}
 
 /* GRID */
 .grid{display:grid;gap:10px;align-items:start}
@@ -108,28 +94,20 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .console-run{padding:8px 16px;background:rgba(168,216,234,.08);border:1px solid rgba(168,216,234,.15);border-radius:6px;color:#a8d8ea;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
 .console-run:hover{background:rgba(168,216,234,.14)}
 
-/* STATUS */
-.status{display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-.status-dot{width:5px;height:5px;border-radius:50%}
-.status-dot.on{background:#4ade80;box-shadow:0 0 5px rgba(74,222,128,.4)}
-.status-dot.off{background:#555}
-
-/* CATEGORY HEADER */
-.cat-header{display:flex;align-items:center;justify-content:space-between;padding:4px 0}
-.cat-icon{font-size:12px}
-
-/* PUNISHMENT SELECT */
+/* PUNISHMENT */
 .punish-select{display:flex;gap:3px}
 .punish-btn{padding:3px 8px;font-size:9px;font-weight:600;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.2);color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;transition:all .15s;letter-spacing:.5px;text-transform:uppercase}
 .punish-btn:hover{border-color:rgba(168,216,234,.15)}
 .punish-btn.active{background:rgba(168,216,234,.1);border-color:rgba(168,216,234,.2);color:#a8d8ea}
 
 /* WHITELIST USER */
-.wl-user{display:flex;align-items:center;gap:6px;padding:4px 8px;background:rgba(0,0,0,.2);border:1px solid rgba(168,216,234,.06);border-radius:5px;font-size:10px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace}
-.wl-user .remove{margin-left:auto;cursor:pointer;color:rgba(239,68,68,.4);transition:color .15s;font-size:12px}
+.wl-user{display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(0,0,0,.2);border:1px solid rgba(168,216,234,.06);border-radius:5px;font-size:10px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;margin-bottom:3px}
+.wl-user .uid{flex:1}
+.wl-user .remove{cursor:pointer;color:rgba(239,68,68,.4);transition:color .15s;font-size:11px;padding:0 2px}
 .wl-user .remove:hover{color:#ef4444}
+.wl-empty{font-size:10px;color:rgba(255,255,255,.12);padding:8px 0;font-style:italic}
 
-/* SAVE TOAST */
+/* TOAST */
 .toast{position:fixed;bottom:20px;right:20px;padding:10px 16px;background:rgba(168,216,234,.1);border:1px solid rgba(168,216,234,.2);border-radius:8px;color:#a8d8ea;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 
@@ -219,76 +197,65 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           </div>
         </div>
 
-        <div class="subtabs" id="an-subtabs">
-          <div class="subtab active" data-sub="webhook">Webhook</div>
-          <div class="subtab" data-sub="ping">Ping</div>
-          <div class="subtab" data-sub="channels">Channels</div>
-          <div class="subtab" data-sub="roles">Roles</div>
-          <div class="subtab" data-sub="bans">Bans</div>
-          <div class="subtab" data-sub="kicks">Kicks</div>
-          <div class="subtab" data-sub="audit">Audit</div>
-          <div class="subtab" data-sub="massban">Lockdown</div>
+        <div class="cat-tabs" id="an-tabs">
+          <div class="cat-tab active" data-cat="webhook">Webhook</div>
+          <div class="cat-tab" data-cat="ping">Ping</div>
+          <div class="cat-tab" data-cat="channels">Channels</div>
+          <div class="cat-tab" data-cat="roles">Roles</div>
+          <div class="cat-tab" data-cat="bans">Bans</div>
+          <div class="cat-tab" data-cat="kicks">Kicks</div>
+          <div class="cat-tab" data-cat="audit">Audit</div>
+          <div class="cat-tab" data-cat="lockdown">Lockdown</div>
         </div>
 
-        <div class="grid grid-3" style="margin-top:8px" id="an-subpages">
-          <div class="subpage active" data-sub="webhook">
-            <div class="card"><div class="card-header"><span class="card-title">Webhook Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="webhook.enabled" onclick="toggleSetting(this,'antinuke.events.webhook.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="webhook.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="webhook.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="ping">
-            <div class="card"><div class="card-header"><span class="card-title">Ping Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="ping.enabled" onclick="toggleSetting(this,'antinuke.events.ping.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="ping.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="ping.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-              <div class="row"><span class="row-label">Channel Whitelist</span><input class="input" style="width:150px" data-key="ping.ping_channel_whitelist" placeholder="Channel IDs"></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="channels">
-            <div class="card"><div class="card-header"><span class="card-title">Channel Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="channels.enabled" onclick="toggleSetting(this,'antinuke.events.channels.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="channels.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="channels.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="roles">
-            <div class="card"><div class="card-header"><span class="card-title">Role Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="roles.enabled" onclick="toggleSetting(this,'antinuke.events.roles.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="roles.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="roles.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="bans">
-            <div class="card"><div class="card-header"><span class="card-title">Ban Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="bans.enabled" onclick="toggleSetting(this,'antinuke.events.bans.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="bans.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="bans.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="kicks">
-            <div class="card"><div class="card-header"><span class="card-title">Kick Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="kicks.enabled" onclick="toggleSetting(this,'antinuke.events.kicks.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="kicks.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="kicks.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="audit">
-            <div class="card"><div class="card-header"><span class="card-title">Audit Protection</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-key="audit.enabled" onclick="toggleSetting(this,'antinuke.events.audit.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="audit.threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="audit.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
-            </div></div>
-          </div>
-          <div class="subpage" data-sub="massban">
-            <div class="card"><div class="card-header"><span class="card-title">Mass-Ban Lockdown</span></div><div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle" data-key="massban.enabled" onclick="toggleSetting(this,'antinuke.massban_lockdown.enabled')"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="massban.threshold" value="3"></div>
-              <div class="row"><span class="row-label">Access Role ID</span><input class="input" style="width:150px" data-key="massban.access_role_id" placeholder="Role ID"></div>
-            </div></div>
-          </div>
-        </div>
+        <div class="cat-content active" data-cat="webhook"><div class="card"><div class="card-header"><span class="card-title">Webhook Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.webhook.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="webhook.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="webhook.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="ping"><div class="card"><div class="card-header"><span class="card-title">Ping Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.ping.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="ping.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="ping.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+          <div class="row"><span class="row-label">Channel Whitelist</span><input class="input" style="width:150px" data-key="ping.ping_channel_whitelist" placeholder="Channel IDs"></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="channels"><div class="card"><div class="card-header"><span class="card-title">Channel Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.channels.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="channels.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="channels.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="roles"><div class="card"><div class="card-header"><span class="card-title">Role Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.roles.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="roles.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="roles.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="bans"><div class="card"><div class="card-header"><span class="card-title">Ban Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.bans.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="bans.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="bans.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="kicks"><div class="card"><div class="card-header"><span class="card-title">Kick Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.kicks.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="kicks.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="kicks.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="audit"><div class="card"><div class="card-header"><span class="card-title">Audit Protection</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle on" onclick="toggleSetting(this,'antinuke.events.audit.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="audit.threshold" value="1"></div>
+          <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-key="audit.punishment"><span class="punish-btn active" onclick="setPunish(this,'strip')">Strip</span><span class="punish-btn" onclick="setPunish(this,'kick')">Kick</span><span class="punish-btn" onclick="setPunish(this,'ban')">Ban</span></div></div>
+        </div></div></div>
+
+        <div class="cat-content" data-cat="lockdown"><div class="card"><div class="card-header"><span class="card-title">Mass-Ban Lockdown</span></div><div class="card-body">
+          <div class="row"><span class="row-label">Enabled</span><div class="toggle" onclick="toggleSetting(this,'antinuke.massban_lockdown.enabled')"><span></span></div></div>
+          <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" data-key="massban.threshold" value="3"></div>
+          <div class="row"><span class="row-label">Access Role ID</span><input class="input" style="width:150px" data-key="massban.access_role_id" placeholder="Role ID"></div>
+        </div></div></div>
       </div>
 
       <!-- WHITELIST -->
@@ -297,15 +264,15 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           <div class="card">
             <div class="card-header"><span class="card-title">Standard Whitelist</span></div>
             <div class="card-body">
-              <div class="row"><span class="row-label">Add User ID</span><input class="input" style="width:140px" id="wl-add-std" placeholder="User ID"></div>
-              <div id="wl-std-list" style="display:flex;flex-direction:column;gap:4px;padding:4px 0"></div>
+              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:5px 10px;font-size:9px" onclick="addWhitelist('standard')">Add</button></div>
+              <div id="wl-std-list"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-header"><span class="card-title">Legacy Whitelist</span></div>
             <div class="card-body">
-              <div class="row"><span class="row-label">Add User ID</span><input class="input" style="width:140px" id="wl-add-leg" placeholder="User ID"></div>
-              <div id="wl-leg-list" style="display:flex;flex-direction:column;gap:4px;padding:4px 0"></div>
+              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:5px 10px;font-size:9px" onclick="addWhitelist('legacy')">Add</button></div>
+              <div id="wl-leg-list"></div>
             </div>
           </div>
         </div>
@@ -339,14 +306,14 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
             <div class="card-header"><span class="card-title">Join</span></div>
             <div class="card-body">
               <div class="row"><span class="row-label">Channel</span><input class="input" style="width:150px" id="jl-join-ch" placeholder="Channel ID"></div>
-              <div class="row"><span class="row-label">Message</span><input class="input" style="width:100%" id="jl-join-msg" placeholder="Welcome {mention} to {server}!"></div>
+              <div class="row"><span class="row-label">Message</span><input class="input" id="jl-join-msg" placeholder="Welcome {mention} to {server}!"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-header"><span class="card-title">Leave</span></div>
             <div class="card-body">
               <div class="row"><span class="row-label">Channel</span><input class="input" style="width:150px" id="jl-leave-ch" placeholder="Channel ID"></div>
-              <div class="row"><span class="row-label">Message</span><input class="input" style="width:100%" id="jl-leave-msg" placeholder="{user} left {server}."></div>
+              <div class="row"><span class="row-label">Message</span><input class="input" id="jl-leave-msg" placeholder="{user} left {server}."></div>
             </div>
           </div>
         </div>
@@ -359,55 +326,28 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 <div class="toast" id="toast">Saved</div>
 
 <script>
-// ===== PARTICLES =====
-const cvs=document.getElementById('particles'),ctx=cvs.getContext('2d');
-let W,H,parts=[],mouse={x:-9999,y:-9999};
-function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}
-resize();addEventListener('resize',resize);
-addEventListener('mousemove',e=>{mouse={x:e.clientX,y:e.clientY}});
-class P{
-  constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.2+.4}
-  update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<180){const f=(180-d)/180*.015;this.vx-=dx*f*.01;this.vy-=dy*f*.01}}
-  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba(168,216,234,.35)';ctx.fill()}
-}
+// PARTICLES
+const cvs=document.getElementById('particles'),ctx=cvs.getContext('2d');let W,H,parts=[],mouse={x:-9999,y:-9999};
+function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}resize();addEventListener('resize',resize);addEventListener('mousemove',e=>{mouse={x:e.clientX,y:e.clientY}});
+class P{constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.2+.4}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<180){const f=(180-d)/180*.015;this.vx-=dx*f*.01;this.vy-=dy*f*.01}}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba(168,216,234,.35)';ctx.fill()}}
 for(let i=0;i<60;i++)parts.push(new P);
-function anim(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw()});for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){const dx=parts[i].x-parts[j].x,dy=parts[i].y-parts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(parts[i].x,parts[i].y);ctx.lineTo(parts[j].x,parts[j].y);ctx.strokeStyle=`rgba(168,216,234,${(1-d/120)*.15})`;ctx.lineWidth=.4;ctx.stroke()}}requestAnimationFrame(anim)}
-anim();
+function anim(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw()});for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){const dx=parts[i].x-parts[j].x,dy=parts[i].y-parts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(parts[i].x,parts[i].y);ctx.lineTo(parts[j].x,parts[j].y);ctx.strokeStyle=`rgba(168,216,234,${(1-d/120)*.15})`;ctx.lineWidth=.4;ctx.stroke()}}requestAnimationFrame(anim)}anim();
 
-// ===== AUTH =====
+// AUTH
 let authed=false;
-async function checkAuth(){
-  try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();if(d.authenticated){authed=true;document.getElementById('nav-auth').textContent='Dashboard';document.getElementById('nav-auth').onclick=()=>window.location.href='dashboard.html';loadSettings()}else{document.getElementById('nav-auth').textContent='Login';document.getElementById('nav-auth').onclick=()=>window.location.href='login.html'}}catch(e){document.getElementById('nav-auth').textContent='Login';document.getElementById('nav-auth').onclick=()=>window.location.href='login.html'}}
+async function checkAuth(){try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();if(d.authenticated){authed=true;document.getElementById('nav-auth').textContent='Dashboard';document.getElementById('nav-auth').onclick=()=>window.location.href='dashboard.html';loadSettings()}else{document.getElementById('nav-auth').textContent='Login';document.getElementById('nav-auth').onclick=()=>window.location.href='login.html'}}catch(e){document.getElementById('nav-auth').textContent='Login';document.getElementById('nav-auth').onclick=()=>window.location.href='login.html'}}
 checkAuth();
 
-// ===== NAVIGATION =====
-document.querySelectorAll('.sidebar-item').forEach(el=>{
-  el.addEventListener('click',()=>{
-    const page=el.dataset.page;
-    document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
-    document.querySelectorAll('.panel-page').forEach(p=>p.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('page-'+page).classList.add('active');
-  });
-});
+// SIDEBAR NAV
+document.querySelectorAll('.sidebar-item').forEach(el=>{el.addEventListener('click',()=>{const page=el.dataset.page;document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));document.querySelectorAll('.panel-page').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('page-'+page).classList.add('active')})});
 
-// ===== SUBTABS =====
-document.querySelectorAll('.subtabs').forEach(tabBar=>{
-  tabBar.querySelectorAll('.subtab').forEach(tab=>{
-    tab.addEventListener('click',()=>{
-      const sub=tab.dataset.sub;
-      tabBar.querySelectorAll('.subtab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      const container=tabBar.nextElementSibling||tabBar.parentElement.querySelector('.grid');
-      if(container){container.querySelectorAll('.subpage').forEach(p=>p.classList.remove('active'));const target=container.querySelector('[data-sub="'+sub+'"]');if(target)target.classList.add('active')}
-    });
-  });
-});
+// CATEGORY TABS (pill style)
+document.querySelectorAll('.cat-tabs').forEach(bar=>{bar.querySelectorAll('.cat-tab').forEach(tab=>{tab.addEventListener('click',()=>{const cat=tab.dataset.cat;bar.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');const page=bar.closest('.panel-page');page.querySelectorAll('.cat-content').forEach(c=>c.classList.remove('active'));const target=page.querySelector('.cat-content[data-cat="'+cat+'"]');if(target)target.classList.add('active')})})});
 
-// ===== SETTINGS =====
-const SETTINGS_KEY='jinn_settings';
+// TOAST
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 
+// LOAD SETTINGS
 async function loadSettings(){
   if(!authed)return;
   try{const r=await fetch('/api/settings',{credentials:'include'});const d=await r.json();if(d.error)return;
@@ -420,59 +360,54 @@ async function loadSettings(){
     document.getElementById('an-window').value=an.window_seconds||30;
     const ev=an.events||{};
     for(const[key,cfg] of Object.entries(ev)){
-      setToggle(`[data-key="${key}.enabled"]`,cfg.enabled);
-      const thInput=document.querySelector(`[data-key="${key}.threshold"]`);if(thInput)thInput.value=cfg.threshold??1;
-      setPunishByKey(key,cfg.punishment||'strip');
+      const card=document.querySelector('.cat-content[data-cat="'+key+'"]');
+      if(!card)continue;
+      const tgl=card.querySelector('.toggle');if(tgl)setToggle(tgl,cfg.enabled);
+      const th=card.querySelector('[data-key="'+key+'.threshold"]');if(th)th.value=cfg.threshold??1;
+      const ps=card.querySelector('[data-key="'+key+'.punishment"]');if(ps)setPunishByKey(ps,cfg.punishment||'strip');
     }
     const mb=an.massban_lockdown||{};
-    setToggle('[data-key="massban.enabled"]',mb.enabled);
-    const mbTh=document.querySelector('[data-key="massban.threshold"]');if(mbTh)mbTh.value=mb.threshold??3;
-    const mbRole=document.querySelector('[data-key="massban.access_role_id"]');if(mbRole)mbRole.value=mb.access_role_id||'';
+    const lkPage=document.querySelector('.cat-content[data-cat="lockdown"]');
+    if(lkPage){const lt=lkPage.querySelector('.toggle');if(lt)setToggle(lt,mb.enabled);const lth=lkPage.querySelector('[data-key="massban.threshold"]');if(lth)lth.value=mb.threshold??3;const lr=lkPage.querySelector('[data-key="massban.access_role_id"]');if(lr)lr.value=mb.access_role_id||''}
     document.getElementById('log-channel').value=d.logging_channel_id||'';
     const le=d.logging_events||{};
-    setToggle('log-bot-commands',le.bot_commands);
-    setToggle('log-antinuke',le.antinuke);
-    setToggle('log-moderation',le.moderation);
-    setToggle('log-audit',le.audit_change);
+    setToggle('log-bot-commands',le.bot_commands);setToggle('log-antinuke',le.antinuke);setToggle('log-moderation',le.moderation);setToggle('log-audit',le.audit_change);
     document.getElementById('jl-join-ch').value=d.join_channel_id||'';
     document.getElementById('jl-join-msg').value=d.join_message||'Welcome {mention} to {server}!';
     document.getElementById('jl-leave-ch').value=d.leave_channel_id||'';
     document.getElementById('jl-leave-msg').value=d.leave_message||'{user} left {server}.';
+    renderWhitelist('wl-std-list',d.whitelist_standard||[]);
+    renderWhitelist('wl-leg-list',d.whitelist_legacy||[]);
   }catch(e){console.error(e)}
 }
 
-function setToggle(selector,on){
-  let el;if(typeof selector==='string')el=document.querySelector(selector);else el=selector;
-  if(!el)return;
-  if(on)el.classList.add('on');else el.classList.remove('on');
+function setToggle(sel,on){let el=typeof sel==='string'?document.querySelector(sel):sel;if(!el)return;if(on)el.classList.add('on');else el.classList.remove('on')}
+function setPunishByKey(sel,value){sel.querySelectorAll('.punish-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.toLowerCase()===value)b.classList.add('active')})}
+
+function renderWhitelist(containerId,users){
+  const c=document.getElementById(containerId);
+  if(!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
+  c.innerHTML=users.map(uid=>`<div class="wl-user"><span class="uid">${uid}</span><span class="remove" onclick="removeWhitelist('${containerId}',${uid})">&times;</span></div>`).join('');
 }
 
-function setPunishByKey(key,value){
-  const sel=document.querySelector(`[data-key="${key}.punishment"]`);if(!sel)return;
-  sel.querySelectorAll('.punish-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.toLowerCase()===value)b.classList.add('active')});
+async function addWhitelist(type){
+  const input=document.getElementById(type==='standard'?'wl-add-std':'wl-add-leg');
+  const uid=input.value.trim();if(!uid)return;
+  try{const r=await fetch('/api/whitelist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'add',user_id:uid,type})});const d=await r.json();if(d.success){input.value='';loadSettings();showToast('Added')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
 }
 
-function toggleSetting(el,key){
-  el.classList.toggle('on');
-  saveSetting(key,el.classList.contains('on'));
+async function removeWhitelist(containerId,uid){
+  try{const r=await fetch('/api/whitelist',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({action:'remove',user_id:uid})});const d=await r.json();if(d.success){loadSettings();showToast('Removed')}else{showToast(d.error||'Error')}}catch(e){showToast('Error')}
 }
 
-function setPunish(el,value){
-  el.parentElement.querySelectorAll('.punish-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  const key=el.parentElement.dataset.key;
-  saveSetting('antinuke.events.'+key+'.punishment',value);
-}
-
+// SAVE SETTINGS
 let saveTimer=null;
-function saveSetting(key,value){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(async()=>{
-    try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value})});showToast('Saved')}catch(e){showToast('Error')}
-  },400);
-}
+function saveSetting(key,value){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value})});showToast('Saved')}catch(e){showToast('Error')}},400)}
 
-// ===== INPUT LISTENERS =====
+function toggleSetting(el,key){el.classList.toggle('on');saveSetting(key,el.classList.contains('on'))}
+function setPunish(el,value){el.parentElement.querySelectorAll('.punish-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');saveSetting('antinuke.events.'+el.parentElement.dataset.key+'.punishment',value)}
+
+// INPUT CHANGE LISTENERS
 document.getElementById('an-window').addEventListener('change',function(){saveSetting('antinuke.window_seconds',parseInt(this.value)||30)});
 document.querySelectorAll('[data-key$=".threshold"]').forEach(inp=>{inp.addEventListener('change',function(){const k=this.dataset.key.replace('.threshold','');saveSetting('antinuke.events.'+k+'.threshold',parseInt(this.value)||1)})});
 document.querySelectorAll('[data-key="massban.threshold"]').forEach(inp=>{inp.addEventListener('change',function(){saveSetting('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)})});
@@ -484,34 +419,12 @@ document.getElementById('jl-leave-ch').addEventListener('change',function(){save
 document.getElementById('jl-leave-msg').addEventListener('change',function(){saveSetting('leave_message',this.value)});
 document.getElementById('s-prefix').addEventListener('change',function(){saveSetting('prefix',this.value||',')});
 
-// ===== CONSOLE =====
-const output=document.getElementById('console-output');
-const input=document.getElementById('console-input');
+// CONSOLE
+const output=document.getElementById('console-output'),input=document.getElementById('console-input');
 function addLine(text,type=''){const l=document.createElement('div');l.className='line'+(type?' '+type:'');l.textContent=text;output.appendChild(l);output.scrollTop=output.scrollHeight}
 function addHTML(html){const d=document.createElement('div');d.className='line';d.innerHTML=html;output.appendChild(d);output.scrollTop=output.scrollHeight}
 async function runCommand(){const cmd=input.value.trim();if(!cmd)return;addHTML(`<span class="prompt">&gt;</span> ${cmd}`);input.value='';try{const r=await fetch('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({command:cmd})});const d=await r.json();if(d.output)d.output.split('\n').forEach(l=>addLine(l));if(d.error)addLine(d.error,'error')}catch(e){addLine('Could not connect to server','error')}}
 input.addEventListener('keydown',e=>{if(e.key==='Enter')runCommand()});
-
-// ===== SELECT DROPDOWNS =====
-document.querySelectorAll('.select-btn').forEach(btn=>{
-  btn.addEventListener('click',function(e){
-    e.stopPropagation();
-    const menu=this.nextElementSibling;
-    document.querySelectorAll('.select-menu').forEach(m=>{if(m!==menu)m.style.display='none'});
-    menu.style.display=menu.style.display==='none'?'block':'none';
-  });
-});
-document.addEventListener('click',()=>{document.querySelectorAll('.select-menu').forEach(m=>m.style.display='none')});
-document.querySelectorAll('.select-opt').forEach(opt=>{
-  opt.addEventListener('click',function(){
-    const menu=this.closest('.select-menu');
-    const btn=menu.previousElementSibling;
-    menu.querySelectorAll('.select-opt').forEach(o=>o.classList.remove('active'));
-    this.classList.add('active');
-    btn.querySelector('span').textContent=this.textContent;
-    menu.style.display='none';
-  });
-});
 </script>
 </body>
 </html>
