@@ -94,9 +94,28 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .cat-content{display:none;animation:fadeIn .15s ease-out}
 .cat-content.active{display:block}
 
+/* ANTI-NUKE CATEGORY PANELS */
+.an-panel{border-radius:12px;background:linear-gradient(145deg,rgba(12,12,20,.7),rgba(8,8,14,.5));border:1px solid rgba(168,216,234,.05);backdrop-filter:blur(12px);overflow:hidden;transition:all .3s ease}
+.an-panel::before{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,rgba(168,216,234,.03) 0%,transparent 50%);pointer-events:none}
+.an-panel:hover{border-color:rgba(168,216,234,.1)}
+.an-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(168,216,234,.04)}
+.an-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.08);flex-shrink:0}
+.an-meta{flex:1;min-width:0}
+.an-name{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px}
+.an-desc{font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.02em}
+.an-status{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all .3s}
+.an-status.on{background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
+.an-status.off{background:rgba(255,255,255,.1)}
+.an-body{padding:2px 0}
+.an-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;transition:background .15s}
+.an-row:hover{background:rgba(168,216,234,.015)}
+.an-row + .an-row{border-top:1px solid rgba(255,255,255,.02)}
+.an-label{font-size:12px;color:rgba(255,255,255,.4);white-space:nowrap;font-weight:400}
+.an-hint{font-size:9px;color:rgba(255,255,255,.12);margin-top:2px;letter-spacing:.02em}
+
 /* PUNISHMENT SELECTOR — segmented buttons */
-.punish-select{display:flex;gap:4px;background:rgba(0,0,0,.2);border-radius:6px;padding:2px;border:1px solid rgba(255,255,255,.03)}
-.punish-btn{padding:5px 12px;font-size:10px;font-weight:600;border-radius:5px;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.25);font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;user-select:none}
+.punish-select{display:flex;gap:0;background:rgba(0,0,0,.25);border-radius:6px;padding:2px;border:1px solid rgba(255,255,255,.04)}
+.punish-btn{padding:5px 14px;font-size:10px;font-weight:600;border-radius:5px;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.22);font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;user-select:none}
 .punish-btn:hover{color:rgba(255,255,255,.4);background:rgba(255,255,255,.03)}
 .punish-btn.active{background:rgba(168,216,234,.12);color:#a8d8ea;box-shadow:0 0 8px rgba(168,216,234,.08)}
 
@@ -233,83 +252,115 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           <div class="cat-tab" data-cat="lockdown">Lockdown</div>
         </div>
         <div class="cat-content active" data-cat="webhook">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Webhook Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="webhook_create"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="webhook_create" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f310;</div>
+              <div class="an-meta"><div class="an-name">Webhook Protection</div><div class="an-desc">Detects mass webhook creation</div></div>
+              <div class="an-status on" data-status="webhook_create"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="webhook_create"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="webhook_create" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="ping">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Ping Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="mass_ping"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="mass_ping" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
-              <div class="row"><span class="row-label">Channel Whitelist</span><input class="input" style="width:160px" id="an-ping-channels" placeholder="Channel IDs, comma separated"></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f4e2;</div>
+              <div class="an-meta"><div class="an-name">Ping Protection</div><div class="an-desc">Detects mass mentions and @everyone</div></div>
+              <div class="an-status on" data-status="mass_ping"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="mass_ping"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="mass_ping" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Channel Whitelist</span><input class="input" style="width:160px" id="an-ping-channels" placeholder="Channel IDs, comma separated"></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="channels">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Channel Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="channel_delete"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="channel_delete" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f5c5;</div>
+              <div class="an-meta"><div class="an-name">Channel Protection</div><div class="an-desc">Detects mass channel deletion</div></div>
+              <div class="an-status on" data-status="channel_delete"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="channel_delete"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="channel_delete" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="roles">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Role Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="role_delete"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="role_delete" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f451;</div>
+              <div class="an-meta"><div class="an-name">Role Protection</div><div class="an-desc">Detects mass role deletion</div></div>
+              <div class="an-status on" data-status="role_delete"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="role_delete"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="role_delete" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="bans">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Ban Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="ban"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="ban" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f6ab;</div>
+              <div class="an-meta"><div class="an-name">Ban Protection</div><div class="an-desc">Detects mass bans</div></div>
+              <div class="an-status on" data-status="ban"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="ban"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="ban" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="kicks">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Kick Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="kick"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="kick" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f462;</div>
+              <div class="an-meta"><div class="an-name">Kick Protection</div><div class="an-desc">Detects mass kicks</div></div>
+              <div class="an-status on" data-status="kick"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="kick"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="kick" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="audit">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Audit Protection</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
-              <div class="row"><span class="row-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f50d;</div>
+              <div class="an-meta"><div class="an-name">Audit Protection</div><div class="an-desc">Detects unauthorized audit log changes</div></div>
+              <div class="an-status on" data-status="audit_change"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
         <div class="cat-content" data-cat="lockdown">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Mass-Ban Lockdown</span></div>
-            <div class="card-body">
-              <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-lockdown"><span></span></div></div>
-              <div class="row"><span class="row-label">Threshold</span><input class="input" style="width:50px;text-align:center" id="an-lockdown-th" value="3"></div>
-              <div class="row"><span class="row-label">Access Role ID</span><input class="input" style="width:150px" id="an-lockdown-role" placeholder="Role ID"></div>
+          <div class="an-panel">
+            <div class="an-head">
+              <div class="an-icon">&#x1f512;</div>
+              <div class="an-meta"><div class="an-name">Mass-Ban Lockdown</div><div class="an-desc">Auto-lockdown when mass bans detected</div></div>
+              <div class="an-status off" data-status="lockdown"></div>
+            </div>
+            <div class="an-body">
+              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle" id="an-lockdown"><span></span></div></div>
+              <div class="an-row"><span class="an-label">Threshold</span><input class="input" style="width:50px;text-align:center" id="an-lockdown-th" value="3"></div>
+              <div class="an-row"><span class="an-label">Access Role ID</span><input class="input" style="width:150px" id="an-lockdown-role" placeholder="Role ID"></div>
             </div>
           </div>
         </div>
@@ -454,6 +505,8 @@ $$('.toggle[data-evt]').forEach(function(el){
   el.addEventListener('click',function(){
     this.classList.toggle('on');
     save('antinuke.events.'+this.getAttribute('data-evt')+'.enabled',isOn(this));
+    var dot=document.querySelector('.an-status[data-status="'+this.getAttribute('data-evt')+'"]');
+    if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}
   });
 });
 
@@ -476,7 +529,7 @@ $$('.punish-select[data-evt]').forEach(function(sel){
 });
 
 // ===== LOCKDOWN =====
-$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this))});
+$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this));var dot=document.querySelector('.an-status[data-status="lockdown"]');if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}});
 $('an-lockdown-th').addEventListener('change',function(){save('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)});
 $('an-lockdown-role').addEventListener('change',function(){save('antinuke.massban_lockdown.access_role_id',this.value||null)});
 $('an-ping-channels').addEventListener('change',function(){save('antinuke.ping_channel_whitelist',this.value.split(',').map(function(s){return parseInt(s.trim())}).filter(Boolean))});
@@ -544,7 +597,10 @@ async function loadSettings(){
     var evts=an.events||{};
     $$('.toggle[data-evt]').forEach(function(el){
       var evt=evts[el.getAttribute('data-evt')];
-      setToggle(el,evt&&typeof evt==='object'?evt.enabled:!!evt);
+      var on=evt&&typeof evt==='object'?evt.enabled:!!evt;
+      setToggle(el,on);
+      var dot=document.querySelector('.an-status[data-status="'+el.getAttribute('data-evt')+'"]');
+      if(dot){dot.classList.toggle('on',on);dot.classList.toggle('off',!on)}
     });
     $$('.evt-input').forEach(function(inp){
       var evt=evts[inp.getAttribute('data-evt')];
@@ -561,6 +617,8 @@ async function loadSettings(){
     $('an-lockdown-th').value=lk.threshold||3;
     $('an-lockdown-role').value=lk.access_role_id||'';
     $('an-ping-channels').value=(an.ping_channel_whitelist||[]).join(', ');
+    var lkDot=document.querySelector('.an-status[data-status="lockdown"]');
+    if(lkDot){lkDot.classList.toggle('on',!!lk.enabled);lkDot.classList.toggle('off',!lk.enabled)}
 
     var le=d.logging_events||{};
     setToggle($('log-bot-commands'),le.bot_commands);
