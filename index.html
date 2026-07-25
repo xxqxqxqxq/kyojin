@@ -38,7 +38,8 @@
     gap: 12px;
   }
   .nav-icon { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-  .nav-name { font-size: 15px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #ffffff; }
+  .nav-name { font-size: 15px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #ffffff; transition: transform .2s ease, letter-spacing .2s ease, color .2s ease; cursor: pointer; }
+  .nav-name:hover { transform: scale(1.08); letter-spacing: 5px; color: #a8d8ea; }
   .nav-center { display: flex; align-items: center; justify-content: center; gap: 8px; }
   .nav-link {
     font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
@@ -95,20 +96,28 @@
     position: relative;
     transform: perspective(600px) rotateY(-6deg) rotateX(2deg);
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease;
+    animation: panelGlow 8s ease-in-out infinite;
+  }
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 18px;
+    background: radial-gradient(circle at top left, rgba(168, 216, 234, 0.14), transparent 34%), radial-gradient(circle at bottom right, rgba(74, 222, 128, 0.1), transparent 34%);
+    filter: blur(24px);
+    opacity: 0.65;
+    pointer-events: none;
+    z-index: -1;
+    animation: panelGlow 8s ease-in-out infinite;
   }
   .panel:hover {
     transform: perspective(600px) rotateY(0deg) rotateX(0deg);
-    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 0 0 1px rgba(168, 216, 234, 0.15);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 0 0 18px rgba(168, 216, 234, 0.18);
   }
-  .panel::before, .panel::after {
-    content: '';
-    position: absolute;
-    width: 14px; height: 14px;
-    border-color: rgba(168, 216, 234, 0.12);
-    border-style: solid;
+  @keyframes panelGlow {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.02); }
   }
-  .panel::before { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
-  .panel::after { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
   .corner-tr, .corner-bl {
     position: absolute;
     width: 14px; height: 14px;

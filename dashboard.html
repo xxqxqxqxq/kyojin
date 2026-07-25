@@ -29,7 +29,8 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .navbar{height:50px;background:rgba(6,6,10,.94);border-bottom:1px solid rgba(168,216,234,.06);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;position:relative;z-index:10}
 .nav-left{display:flex;align-items:center;gap:12px}
 .nav-icon{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(168,216,234,.15)}
-.nav-name{font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff}
+.nav-name{font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff;transition:transform .2s ease,letter-spacing .2s ease,color .2s ease;cursor:pointer}
+.nav-name:hover{transform:scale(1.08);letter-spacing:0.2em;color:#a8d8ea}
 .nav-right{display:flex;align-items:center;gap:22px}
 .nav-link{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;transition:color .2s;text-decoration:none}
 .nav-link:hover{color:#a8d8ea}
