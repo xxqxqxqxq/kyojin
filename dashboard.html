@@ -15,10 +15,7 @@ body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-fon
 @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(74,222,128,.5)}50%{transform:scale(1.3);box-shadow:0 0 14px rgba(74,222,128,.7)}}
 @keyframes loadSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 @keyframes loadBar{0%{width:0}100%{width:100%}}
-@keyframes loadFadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(168,216,234,.05)}50%{box-shadow:0 0 25px rgba(168,216,234,.1)}}
 
-/* LOADING SCREEN */
 .loading-screen{position:fixed;inset:0;z-index:9999;background:#060510;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease,transform .4s ease}
 .loading-screen.done{opacity:0;transform:scale(1.02);pointer-events:none}
 .loading-icon{width:48px;height:48px;border-radius:50%;border:2px solid rgba(168,216,234,.1);border-top-color:#a8d8ea;animation:loadSpin .8s linear infinite;margin-bottom:16px}
@@ -29,109 +26,114 @@ body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-fon
 .aurora{position:fixed;top:-40%;left:-20%;width:140%;height:140%;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 70% 10%,rgba(168,216,234,.08) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 20% 80%,rgba(120,180,220,.06) 0%,transparent 55%),radial-gradient(ellipse 45% 40% at 90% 90%,rgba(168,216,234,.04) 0%,transparent 55%);animation:auroraShift 20s ease-in-out infinite alternate}
 canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
-/* NAVBAR */
-.navbar{height:48px;background:rgba(6,6,10,.92);border-bottom:1px solid rgba(168,216,234,.06);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;position:relative;z-index:10}
-.nav-left{display:flex;align-items:center;gap:10px}
-.nav-icon{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid rgba(168,216,234,.15)}
-.nav-name{font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff}
-.nav-right{display:flex;align-items:center;gap:20px}
+.navbar{height:50px;background:rgba(6,6,10,.94);border-bottom:1px solid rgba(168,216,234,.06);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;position:relative;z-index:10}
+.nav-left{display:flex;align-items:center;gap:12px}
+.nav-icon{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(168,216,234,.15)}
+.nav-name{font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff}
+.nav-right{display:flex;align-items:center;gap:22px}
 .nav-link{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;transition:color .2s;text-decoration:none}
-.nav-link:hover,.nav-link.active{color:#a8d8ea}
+.nav-link:hover{color:#a8d8ea}
 .online-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s ease-in-out infinite}
 
-/* LAYOUT */
-.layout{display:flex;height:calc(100vh - 48px);position:relative;z-index:1}
-.sidebar{width:170px;background:rgba(6,6,10,.92);border-right:1px solid rgba(168,216,234,.04);padding:10px 0;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
-.sidebar-label{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(168,216,234,.2);padding:10px 14px 4px}
-.sidebar-item{padding:7px 14px;font-size:11px;color:rgba(255,255,255,.25);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;border-left:2px solid transparent;font-weight:500}
+.layout{display:flex;height:calc(100vh - 50px);position:relative;z-index:1}
+.sidebar{width:180px;background:rgba(6,6,10,.94);border-right:1px solid rgba(168,216,234,.04);padding:12px 0;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-label{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(168,216,234,.18);padding:14px 16px 6px}
+.sidebar-item{padding:8px 16px;font-size:11px;color:rgba(255,255,255,.22);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;border-left:2px solid transparent;font-weight:500}
 .sidebar-item:hover{color:rgba(255,255,255,.5);background:rgba(168,216,234,.02)}
 .sidebar-item.active{color:#a8d8ea;background:rgba(168,216,234,.04);border-left-color:#a8d8ea}
 
-/* MAIN CONTENT */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.panel-area{flex:1;overflow-y:auto;padding:16px 18px}
+.panel-area{flex:1;overflow-y:auto;padding:20px 24px}
 .panel-area::-webkit-scrollbar{width:5px}
 .panel-area::-webkit-scrollbar-track{background:transparent}
 .panel-area::-webkit-scrollbar-thumb{background:rgba(168,216,234,.08);border-radius:99px}
 .panel-page{display:none}
 .panel-page.active{display:block;animation:slideUp .25s ease-out}
 
-/* CARDS — premium glassmorphism */
-.card{border-radius:12px;background:linear-gradient(145deg,rgba(12,12,20,.7),rgba(8,8,14,.5));border:1px solid rgba(168,216,234,.05);backdrop-filter:blur(12px);transition:all .3s ease;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,rgba(168,216,234,.03) 0%,transparent 50%);pointer-events:none}
-.card:hover{border-color:rgba(168,216,234,.1);box-shadow:0 4px 30px rgba(168,216,234,.03)}
-.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(168,216,234,.04);position:relative}
-.card-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(168,216,234,.5)}
-.card-body{padding:4px 0}
+/* CARDS */
+.card{border-radius:12px;background:rgba(10,10,16,.65);border:1px solid rgba(168,216,234,.05);transition:border-color .25s}
+.card:hover{border-color:rgba(168,216,234,.1)}
+.card-header{padding:14px 18px 10px;border-bottom:1px solid rgba(168,216,234,.03)}
+.card-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(168,216,234,.4)}
+.card-body{padding:2px 0}
 
-/* ROWS — clean, spacious */
-.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;transition:background .15s}
+/* ROWS */
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;transition:background .15s}
 .row:hover{background:rgba(168,216,234,.015)}
-.row + .row{border-top:1px solid rgba(255,255,255,.015)}
-.row-label{font-size:12px;color:rgba(255,255,255,.45);white-space:nowrap;font-weight:400;min-width:0}
-.row-value{font-size:11px;color:rgba(168,216,234,.35);font-family:'JetBrains Mono',monospace}
+.row+.row{border-top:1px solid rgba(255,255,255,.015)}
+.row-label{font-size:12px;color:rgba(255,255,255,.4);white-space:nowrap;font-weight:400}
+.row-value{font-size:11px;color:rgba(168,216,234,.3);font-family:'JetBrains Mono',monospace}
 
-/* TOGGLE — smooth, satisfying */
+/* TOGGLE */
 .toggle{position:relative;flex-shrink:0;width:36px;height:20px;border-radius:10px;padding:0;cursor:pointer;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);transition:all .25s cubic-bezier(.4,0,.2,1)}
-.toggle.on{background:rgba(168,216,234,.75);border-color:rgba(168,216,234,.5);box-shadow:0 0 12px rgba(168,216,234,.2),inset 0 1px 0 rgba(255,255,255,.1)}
+.toggle.on{background:rgba(74,222,128,.7);border-color:rgba(74,222,128,.4);box-shadow:0 0 10px rgba(74,222,128,.15)}
 .toggle span{position:absolute;border-radius:50%;background:#fff;width:14px;height:14px;top:2px;left:2px;transition:transform .2s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .toggle.on span{transform:translateX(16px)}
 
-/* INPUTS — monospace, clean */
+/* INPUTS */
 .input{width:100%;padding:8px 10px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:6px;color:#ddd;font-size:11px;font-family:'JetBrains Mono',monospace;outline:none;transition:all .2s}
 .input:focus{border-color:rgba(168,216,234,.3);box-shadow:0 0 0 2px rgba(168,216,234,.06)}
-.input::placeholder{color:rgba(255,255,255,.12)}
+.input::placeholder{color:rgba(255,255,255,.1)}
 
 /* GRID */
-.grid{display:grid;gap:12px;align-items:start}
+.grid{display:grid;gap:14px;align-items:start}
 .grid-2{grid-template-columns:1fr 1fr}
 
-/* CATEGORY TABS — pill-style, modern */
-.cat-tabs{display:flex;gap:5px;padding:12px 0 10px;flex-wrap:wrap}
-.cat-tab{padding:7px 14px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.22);cursor:pointer;border-radius:8px;transition:all .2s;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.03);user-select:none;position:relative}
+/* CATEGORY TABS */
+.cat-tabs{display:flex;gap:6px;padding:14px 0 12px;flex-wrap:wrap}
+.cat-tab{display:flex;align-items:center;gap:6px;padding:7px 14px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.2);cursor:pointer;border-radius:8px;transition:all .2s;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);user-select:none}
+.cat-tab img{width:16px;height:16px;filter:grayscale(1) brightness(.5);transition:filter .2s}
 .cat-tab:hover{color:rgba(255,255,255,.45);background:rgba(168,216,234,.04);border-color:rgba(168,216,234,.08)}
+.cat-tab:hover img{filter:grayscale(0) brightness(1)}
 .cat-tab.active{color:#a8d8ea;background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.18);box-shadow:0 0 12px rgba(168,216,234,.05)}
+.cat-tab.active img{filter:grayscale(0) brightness(1.1)}
 .cat-content{display:none;animation:fadeIn .15s ease-out}
 .cat-content.active{display:block}
 
 /* ANTI-NUKE CATEGORY PANELS */
-.an-panel{border-radius:12px;background:linear-gradient(145deg,rgba(12,12,20,.7),rgba(8,8,14,.5));border:1px solid rgba(168,216,234,.05);backdrop-filter:blur(12px);overflow:hidden;transition:all .3s ease}
-.an-panel::before{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,rgba(168,216,234,.03) 0%,transparent 50%);pointer-events:none}
-.an-panel:hover{border-color:rgba(168,216,234,.1)}
-.an-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(168,216,234,.04)}
-.an-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.08);flex-shrink:0}
-.an-meta{flex:1;min-width:0}
-.an-name{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px}
-.an-desc{font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.02em}
-.an-status{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all .3s}
-.an-status.on{background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
-.an-status.off{background:rgba(255,255,255,.1)}
-.an-body{padding:2px 0}
-.an-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;transition:background .15s}
-.an-row:hover{background:rgba(168,216,234,.015)}
-.an-row + .an-row{border-top:1px solid rgba(255,255,255,.02)}
-.an-label{font-size:12px;color:rgba(255,255,255,.4);white-space:nowrap;font-weight:400}
-.an-hint{font-size:9px;color:rgba(255,255,255,.12);margin-top:2px;letter-spacing:.02em}
+.an-panel{border-radius:12px;background:rgba(10,10,16,.55);border:1px solid rgba(168,216,234,.04);overflow:hidden}
+.an-panel:hover{border-color:rgba(168,216,234,.08)}
 
-/* PUNISHMENT SELECTOR — segmented buttons */
-.punish-select{display:flex;gap:0;background:rgba(0,0,0,.25);border-radius:6px;padding:2px;border:1px solid rgba(255,255,255,.04)}
-.punish-btn{padding:5px 14px;font-size:10px;font-weight:600;border-radius:5px;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.22);font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;user-select:none}
+.an-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(168,216,234,.02);border-bottom:1px solid rgba(168,216,234,.04)}
+.an-emoji{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.08);flex-shrink:0;transition:all .2s}
+.an-emoji img{width:20px;height:20px}
+.an-panel:hover .an-emoji{background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.12)}
+
+.an-info{flex:1;min-width:0}
+.an-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:3px;letter-spacing:.03em}
+.an-sub{font-size:10px;color:rgba(255,255,255,.16);letter-spacing:.01em}
+
+.an-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .3s}
+.an-dot.on{background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.35)}
+.an-dot.off{background:rgba(255,255,255,.08)}
+
+.an-body{padding:4px 0}
+
+.an-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;transition:background .15s}
+.an-row:hover{background:rgba(168,216,234,.015)}
+.an-row+.an-row{border-top:1px solid rgba(255,255,255,.02)}
+.an-label{font-size:12px;color:rgba(255,255,255,.38);white-space:nowrap;font-weight:400}
+
+/* PUNISHMENT SELECTOR */
+.punish-select{display:flex;gap:0;background:rgba(0,0,0,.3);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,.04)}
+.punish-btn{padding:6px 16px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.2);font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;user-select:none}
 .punish-btn:hover{color:rgba(255,255,255,.4);background:rgba(255,255,255,.03)}
-.punish-btn.active{background:rgba(168,216,234,.12);color:#a8d8ea;box-shadow:0 0 8px rgba(168,216,234,.08)}
+.punish-btn.active{background:rgba(168,216,234,.12);color:#a8d8ea}
+.punish-btn.danger.active{background:rgba(239,68,68,.12);color:#ef4444}
 
 /* WHITELIST */
-.wl-user{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(0,0,0,.2);border:1px solid rgba(168,216,234,.05);border-radius:6px;font-size:11px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;margin-bottom:4px;transition:all .15s}
+.wl-user{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(168,216,234,.05);border-radius:6px;font-size:11px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;margin-bottom:4px;transition:all .15s}
 .wl-user:hover{border-color:rgba(168,216,234,.1);background:rgba(0,0,0,.3)}
 .wl-user .uid{flex:1}
-.wl-user .remove{cursor:pointer;color:rgba(239,68,68,.35);transition:all .15s;font-size:13px;padding:0 4px;border-radius:4px;line-height:1}
+.wl-user .remove{cursor:pointer;color:rgba(239,68,68,.35);transition:all .15s;font-size:14px;padding:2px 5px;border-radius:4px;line-height:1}
 .wl-user .remove:hover{color:#ef4444;background:rgba(239,68,68,.08)}
-.wl-empty{font-size:11px;color:rgba(255,255,255,.1);padding:10px 0;font-style:italic;text-align:center}
+.wl-empty{font-size:11px;color:rgba(255,255,255,.08);padding:12px 0;font-style:italic;text-align:center}
 
 /* GIF PREVIEW */
 .gif-preview{width:100%;max-width:300px;border-radius:8px;border:1px solid rgba(168,216,234,.08);margin-top:8px}
 
 /* CONSOLE */
-.console{display:flex;flex-direction:column;height:calc(100vh - 160px)}
+.console{display:flex;flex-direction:column;height:calc(100vh - 180px)}
 .console-output{flex:1;background:rgba(6,6,10,.8);border:1px solid rgba(168,216,234,.04);border-radius:10px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);overflow-y:auto;margin-bottom:10px;line-height:1.6}
 .console-output .line{margin-bottom:1px}
 .console-output .line.info{color:#a8d8ea}
@@ -140,15 +142,13 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .console-input-row{display:flex;gap:8px}
 .console-input{flex:1;padding:10px 14px;background:rgba(6,6,10,.8);border:1px solid rgba(168,216,234,.06);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;transition:border-color .2s}
 .console-input:focus{border-color:rgba(168,216,234,.25)}
-.console-input::placeholder{color:rgba(255,255,255,.12)}
-.console-run{padding:10px 18px;background:rgba(168,216,234,.08);border:1px solid rgba(168,216,234,.15);border-radius:8px;color:#a8d8ea;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.console-input::placeholder{color:rgba(255,255,255,.1)}
+.console-run{padding:10px 20px;background:rgba(168,216,234,.08);border:1px solid rgba(168,216,234,.15);border-radius:8px;color:#a8d8ea;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
 .console-run:hover{background:rgba(168,216,234,.14);border-color:rgba(168,216,234,.25)}
 
-/* TOAST */
 .toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;background:rgba(168,216,234,.1);border:1px solid rgba(168,216,234,.2);border-radius:8px;color:#a8d8ea;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100;pointer-events:none;backdrop-filter:blur(8px)}
 .toast.show{opacity:1;transform:translateY(0)}
 
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(168,216,234,.1);border-radius:2px}
@@ -156,7 +156,6 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
 <div class="loading-screen" id="loading-screen">
   <div class="loading-icon"></div>
   <div class="loading-text">Loading Dashboard</div>
@@ -168,7 +167,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
 <nav class="navbar">
   <div class="nav-left">
-    <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:10px">
+    <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:12px">
       <img class="nav-icon" src="icon.png" alt="">
       <span class="nav-name">Jinn</span>
     </a>
@@ -201,7 +200,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
         <div class="console">
           <div class="console-output" id="console-output">
             <div class="line info">Jinn Security — Console</div>
-            <div class="line" style="color:rgba(255,255,255,.12)">Type commands below. Use the bot prefix ,</div>
+            <div class="line" style="color:rgba(255,255,255,.1)">Type commands below. Use the bot prefix ,</div>
             <div class="line">&nbsp;</div>
           </div>
           <div class="console-input-row">
@@ -234,128 +233,137 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
       <!-- ANTI-NUKE -->
       <div class="panel-page" id="page-antinuke">
-        <div class="card" style="margin-bottom:12px">
+        <div class="card" style="margin-bottom:14px">
           <div class="card-header"><span class="card-title">Global</span></div>
           <div class="card-body">
             <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-enabled"><span></span></div></div>
             <div class="row"><span class="row-label">Window (seconds)</span><input class="input" style="width:60px;text-align:center" id="an-window" value="5"></div>
           </div>
         </div>
+
         <div class="cat-tabs" id="an-tabs">
-          <div class="cat-tab active" data-cat="webhook">Webhook</div>
-          <div class="cat-tab" data-cat="ping">Ping</div>
-          <div class="cat-tab" data-cat="channels">Channels</div>
-          <div class="cat-tab" data-cat="roles">Roles</div>
-          <div class="cat-tab" data-cat="bans">Bans</div>
-          <div class="cat-tab" data-cat="kicks">Kicks</div>
-          <div class="cat-tab" data-cat="audit">Audit</div>
-          <div class="cat-tab" data-cat="lockdown">Lockdown</div>
+          <div class="cat-tab active" data-cat="webhook"><img src="https://cdn.discordapp.com/emojis/152961720210714624.png" alt=""> Webhook</div>
+          <div class="cat-tab" data-cat="ping"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""> Ping</div>
+          <div class="cat-tab" data-cat="channels"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""> Channels</div>
+          <div class="cat-tab" data-cat="roles"><img src="https://cdn.discordapp.com/emojis/152961720210714624.png" alt=""> Roles</div>
+          <div class="cat-tab" data-cat="bans"><img src="https://cdn.discordapp.com/emojis/1529617223755370538.png" alt=""> Bans</div>
+          <div class="cat-tab" data-cat="kicks"><img src="https://cdn.discordapp.com/emojis/1529617223755370538.png" alt=""> Kicks</div>
+          <div class="cat-tab" data-cat="audit"><img src="https://cdn.discordapp.com/emojis/152961720210714624.png" alt=""> Audit</div>
+          <div class="cat-tab" data-cat="lockdown"><img src="https://cdn.discordapp.com/emojis/1529617202141987027.png" alt=""> Lockdown</div>
         </div>
+
         <div class="cat-content active" data-cat="webhook">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f310;</div>
-              <div class="an-meta"><div class="an-name">Webhook Protection</div><div class="an-desc">Detects mass webhook creation</div></div>
-              <div class="an-status on" data-status="webhook_create"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Webhook Protection</div><div class="an-sub">Detects mass webhook creation</div></div>
+              <div class="an-dot on" data-status="webhook_create"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="webhook_create"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="webhook_create" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="ping">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f4e2;</div>
-              <div class="an-meta"><div class="an-name">Ping Protection</div><div class="an-desc">Detects mass mentions and @everyone</div></div>
-              <div class="an-status on" data-status="mass_ping"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Ping Protection</div><div class="an-sub">Detects mass mentions and @everyone</div></div>
+              <div class="an-dot on" data-status="mass_ping"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="mass_ping"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="mass_ping" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
-              <div class="an-row"><span class="an-label">Channel Whitelist</span><input class="input" style="width:160px" id="an-ping-channels" placeholder="Channel IDs, comma separated"></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Channel Whitelist</span><input class="input" style="width:170px" id="an-ping-channels" placeholder="Channel IDs, comma separated"></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="channels">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f5c5;</div>
-              <div class="an-meta"><div class="an-name">Channel Protection</div><div class="an-desc">Detects mass channel deletion</div></div>
-              <div class="an-status on" data-status="channel_delete"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/152961720210714624.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Channel Protection</div><div class="an-sub">Detects mass channel deletion</div></div>
+              <div class="an-dot on" data-status="channel_delete"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="channel_delete"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="channel_delete" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="roles">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f451;</div>
-              <div class="an-meta"><div class="an-name">Role Protection</div><div class="an-desc">Detects mass role deletion</div></div>
-              <div class="an-status on" data-status="role_delete"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/152961720210714624.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Role Protection</div><div class="an-sub">Detects mass role deletion</div></div>
+              <div class="an-dot on" data-status="role_delete"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="role_delete"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="role_delete" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="bans">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f6ab;</div>
-              <div class="an-meta"><div class="an-name">Ban Protection</div><div class="an-desc">Detects mass bans</div></div>
-              <div class="an-status on" data-status="ban"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529617223755370538.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Ban Protection</div><div class="an-sub">Detects mass bans</div></div>
+              <div class="an-dot on" data-status="ban"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="ban"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="ban" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="kicks">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f462;</div>
-              <div class="an-meta"><div class="an-name">Kick Protection</div><div class="an-desc">Detects mass kicks</div></div>
-              <div class="an-status on" data-status="kick"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529617223755370538.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Kick Protection</div><div class="an-sub">Detects mass kicks</div></div>
+              <div class="an-dot on" data-status="kick"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="kick"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="kick" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="audit">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f50d;</div>
-              <div class="an-meta"><div class="an-name">Audit Protection</div><div class="an-desc">Detects unauthorized audit log changes</div></div>
-              <div class="an-status on" data-status="audit_change"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/152961720210714624.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Audit Protection</div><div class="an-sub">Detects unauthorized audit log changes</div></div>
+              <div class="an-dot on" data-status="audit_change"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
               <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn" data-val="ban">Ban</span></div></div>
+              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
             </div>
           </div>
         </div>
+
         <div class="cat-content" data-cat="lockdown">
           <div class="an-panel">
             <div class="an-head">
-              <div class="an-icon">&#x1f512;</div>
-              <div class="an-meta"><div class="an-name">Mass-Ban Lockdown</div><div class="an-desc">Auto-lockdown when mass bans detected</div></div>
-              <div class="an-status off" data-status="lockdown"></div>
+              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529617202141987027.png" alt=""></div>
+              <div class="an-info"><div class="an-title">Mass-Ban Lockdown</div><div class="an-sub">Auto-lockdown when mass bans detected</div></div>
+              <div class="an-dot off" data-status="lockdown"></div>
             </div>
             <div class="an-body">
               <div class="an-row"><span class="an-label">Enabled</span><div class="toggle" id="an-lockdown"><span></span></div></div>
@@ -372,15 +380,15 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           <div class="card">
             <div class="card-header"><span class="card-title">Standard Whitelist</span></div>
             <div class="card-body">
-              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:6px 12px;font-size:9px" id="wl-add-std-btn">Add</button></div>
-              <div id="wl-std-list"></div>
+              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="wl-add-std-btn">Add</button></div>
+              <div id="wl-std-list" style="padding:0 18px 4px"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-header"><span class="card-title">Legacy Whitelist</span></div>
             <div class="card-body">
-              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:6px 12px;font-size:9px" id="wl-add-leg-btn">Add</button></div>
-              <div id="wl-leg-list"></div>
+              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="wl-add-leg-btn">Add</button></div>
+              <div id="wl-leg-list" style="padding:0 18px 4px"></div>
             </div>
           </div>
         </div>
@@ -416,7 +424,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
               <div class="row"><span class="row-label">Channel</span><input class="input" style="width:150px" id="jl-join-ch" placeholder="Channel ID"></div>
               <div class="row"><span class="row-label">Message</span><input class="input" id="jl-join-msg" placeholder="Welcome {mention} to {server}!"></div>
               <div class="row"><span class="row-label">GIF URL</span><input class="input" id="jl-join-gif" placeholder="https://..."></div>
-              <div style="padding:0 16px 12px"><img class="gif-preview" id="jl-join-preview" src="" alt="Join GIF" style="display:none"></div>
+              <div style="padding:4px 18px 12px"><img class="gif-preview" id="jl-join-preview" src="" alt="Join GIF" style="display:none"></div>
             </div>
           </div>
           <div class="card">
@@ -425,7 +433,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
               <div class="row"><span class="row-label">Channel</span><input class="input" style="width:150px" id="jl-leave-ch" placeholder="Channel ID"></div>
               <div class="row"><span class="row-label">Message</span><input class="input" id="jl-leave-msg" placeholder="{user} left {server}."></div>
               <div class="row"><span class="row-label">GIF URL</span><input class="input" id="jl-leave-gif" placeholder="https://..."></div>
-              <div style="padding:0 16px 12px"><img class="gif-preview" id="jl-leave-preview" src="" alt="Leave GIF" style="display:none"></div>
+              <div style="padding:4px 18px 12px"><img class="gif-preview" id="jl-leave-preview" src="" alt="Leave GIF" style="display:none"></div>
             </div>
           </div>
         </div>
@@ -438,7 +446,6 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 <div class="toast" id="toast">Saved</div>
 
 <script>
-// ===== PARTICLES =====
 const cvs=document.getElementById('particles'),ctx=cvs.getContext('2d');
 let W,H,parts=[],mouse={x:-9999,y:-9999};
 function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}
@@ -449,18 +456,15 @@ for(let i=0;i<60;i++)parts.push(new P);
 function anim(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw()});for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){const dx=parts[i].x-parts[j].x,dy=parts[i].y-parts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(parts[i].x,parts[i].y);ctx.lineTo(parts[j].x,parts[j].y);ctx.strokeStyle=`rgba(168,216,234,${(1-d/120)*.15})`;ctx.lineWidth=.4;ctx.stroke()}}requestAnimationFrame(anim)}
 anim();
 
-// ===== HELPERS =====
 function $(id){return document.getElementById(id)}
 function $$(sel,root){return(root||document).querySelectorAll(sel)}
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 function setToggle(el,on){if(!el)return;if(on)el.classList.add('on');else el.classList.remove('on')}
 function isOn(el){return el.classList.contains('on')}
 
-// ===== TOAST =====
 let saveTimers={};
 function save(key,val){clearTimeout(saveTimers[key]);saveTimers[key]=setTimeout(async()=>{try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value:val})});showToast('Saved')}catch(e){showToast('Error')}},400)}
 
-// ===== AUTH =====
 let authed=false;
 async function checkAuth(){
   try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();
@@ -469,7 +473,6 @@ async function checkAuth(){
   }catch(e){$('nav-auth').textContent='Login';$('nav-auth').onclick=()=>location.href='login.html'}
 }
 
-// ===== SIDEBAR NAVIGATION =====
 $$('.sidebar-item').forEach(function(el){
   el.addEventListener('click',function(){
     var page=this.getAttribute('data-page');
@@ -481,7 +484,6 @@ $$('.sidebar-item').forEach(function(el){
   });
 });
 
-// ===== CATEGORY TABS (antinuke) =====
 $$('.cat-tabs').forEach(function(bar){
   $$('.cat-tab',bar).forEach(function(tab){
     tab.addEventListener('click',function(){
@@ -496,28 +498,24 @@ $$('.cat-tabs').forEach(function(bar){
   });
 });
 
-// ===== TOGGLES (global) =====
 $('an-enabled').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.enabled',isOn(this))});
 $('an-window').addEventListener('change',function(){save('antinuke.window_seconds',parseInt(this.value)||5)});
 
-// ===== ANTI-NUKE EVENT TOGGLES =====
 $$('.toggle[data-evt]').forEach(function(el){
   el.addEventListener('click',function(){
     this.classList.toggle('on');
     save('antinuke.events.'+this.getAttribute('data-evt')+'.enabled',isOn(this));
-    var dot=document.querySelector('.an-status[data-status="'+this.getAttribute('data-evt')+'"]');
+    var dot=document.querySelector('.an-dot[data-status="'+this.getAttribute('data-evt')+'"]');
     if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}
   });
 });
 
-// ===== ANTI-NUKE THRESHOLD INPUTS =====
 $$('.evt-input').forEach(function(inp){
   inp.addEventListener('change',function(){
     save('antinuke.events.'+this.getAttribute('data-evt')+'.threshold',parseInt(this.value)||1);
   });
 });
 
-// ===== PUNISHMENT BUTTONS =====
 $$('.punish-select[data-evt]').forEach(function(sel){
   $$('.punish-btn',sel).forEach(function(btn){
     btn.addEventListener('click',function(){
@@ -528,22 +526,17 @@ $$('.punish-select[data-evt]').forEach(function(sel){
   });
 });
 
-// ===== LOCKDOWN =====
-$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this));var dot=document.querySelector('.an-status[data-status="lockdown"]');if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}});
+$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this));var dot=document.querySelector('.an-dot[data-status="lockdown"]');if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}});
 $('an-lockdown-th').addEventListener('change',function(){save('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)});
 $('an-lockdown-role').addEventListener('change',function(){save('antinuke.massban_lockdown.access_role_id',this.value||null)});
 $('an-ping-channels').addEventListener('change',function(){save('antinuke.ping_channel_whitelist',this.value.split(',').map(function(s){return parseInt(s.trim())}).filter(Boolean))});
 
-// ===== LOGGING =====
 $('log-bot-commands').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.bot_commands',isOn(this))});
 $('log-antinuke').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.antinuke',isOn(this))});
 $('log-moderation').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.moderation',isOn(this))});
 $('log-audit').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.audit_change',isOn(this))});
-
-// ===== LOGGING CHANNEL =====
 $('log-channel').addEventListener('change',function(){save('logging_channel_id',parseInt(this.value)||null)});
 
-// ===== JOIN / LEAVE =====
 $('jl-join-ch').addEventListener('change',function(){save('join_channel_id',parseInt(this.value)||null)});
 $('jl-join-msg').addEventListener('change',function(){save('join_message',this.value)});
 $('jl-join-gif').addEventListener('change',function(){save('join_gif',this.value);previewGif('jl-join-gif','jl-join-preview')});
@@ -552,10 +545,8 @@ $('jl-leave-msg').addEventListener('change',function(){save('leave_message',this
 $('jl-leave-gif').addEventListener('change',function(){save('leave_gif',this.value);previewGif('jl-leave-gif','jl-leave-preview')});
 function previewGif(inputId,imgId){var url=$(inputId).value.trim();var img=$(imgId);if(url){img.src=url;img.style.display='block'}else{img.style.display='none'}}
 
-// ===== SETTINGS INPUTS =====
 $('s-prefix').addEventListener('change',function(){save('prefix',this.value||',')});
 
-// ===== WHITELIST =====
 function renderWl(id,users){
   var c=$(id);
   if(!users||!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
@@ -573,7 +564,6 @@ async function removeWl(uid){
 $('wl-add-std-btn').addEventListener('click',function(){addWl('standard')});
 $('wl-add-leg-btn').addEventListener('click',function(){addWl('legacy')});
 
-// ===== CONSOLE =====
 function addLine(text,type){var l=document.createElement('div');l.className='line'+(type?' '+type:'');l.textContent=text;$('console-output').appendChild(l);$('console-output').scrollTop=$('console-output').scrollHeight}
 function addHTML(html){var d=document.createElement('div');d.className='line';d.innerHTML=html;$('console-output').appendChild(d);$('console-output').scrollTop=$('console-output').scrollHeight}
 $('console-run-btn').addEventListener('click',function(){
@@ -583,7 +573,6 @@ $('console-run-btn').addEventListener('click',function(){
 });
 $('console-input').addEventListener('keydown',function(e){if(e.key==='Enter')$('console-run-btn').click()});
 
-// ===== LOAD SETTINGS =====
 async function loadSettings(){
   try{var r=await fetch('/api/settings',{credentials:'include'});var d=await r.json();if(d.error)return;
 
@@ -599,7 +588,7 @@ async function loadSettings(){
       var evt=evts[el.getAttribute('data-evt')];
       var on=evt&&typeof evt==='object'?evt.enabled:!!evt;
       setToggle(el,on);
-      var dot=document.querySelector('.an-status[data-status="'+el.getAttribute('data-evt')+'"]');
+      var dot=document.querySelector('.an-dot[data-status="'+el.getAttribute('data-evt')+'"]');
       if(dot){dot.classList.toggle('on',on);dot.classList.toggle('off',!on)}
     });
     $$('.evt-input').forEach(function(inp){
@@ -617,7 +606,7 @@ async function loadSettings(){
     $('an-lockdown-th').value=lk.threshold||3;
     $('an-lockdown-role').value=lk.access_role_id||'';
     $('an-ping-channels').value=(an.ping_channel_whitelist||[]).join(', ');
-    var lkDot=document.querySelector('.an-status[data-status="lockdown"]');
+    var lkDot=document.querySelector('.an-dot[data-status="lockdown"]');
     if(lkDot){lkDot.classList.toggle('on',!!lk.enabled);lkDot.classList.toggle('off',!lk.enabled)}
 
     var le=d.logging_events||{};
@@ -640,7 +629,6 @@ async function loadSettings(){
   }catch(e){console.error(e)}
 }
 
-// ===== INIT =====
 checkAuth().then(function(){
   return loadSettings();
 }).then(function(){
