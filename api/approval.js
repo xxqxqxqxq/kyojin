@@ -13,8 +13,10 @@ module.exports = async function handler(req, res) {
 
     const result = await resp.json();
 
-    if (resp.ok && result.status === 'approved' && result.token) {
-      res.setHeader('Set-Cookie', `session=${result.token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=3600`);
+    if (resp.ok && result.status === 'approved') {
+      if (result.token) {
+        res.setHeader('Set-Cookie', `session=${result.token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=3600`);
+      }
       return res.status(200).json({ status: 'approved' });
     }
 
