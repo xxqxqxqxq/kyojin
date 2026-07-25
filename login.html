@@ -231,14 +231,14 @@
 </nav>
 <canvas id="net"></canvas>
 <div class="content">
-  <div class="login-card">
+  <div class="login-card" id="login-card">
     <div class="login-header">
       <img class="login-icon" src="icon.png" alt="">
       <div class="login-title">JINN</div>
       <div class="login-subtitle">Admin Panel</div>
     </div>
     <div class="login-error" id="error">Invalid credentials</div>
-    <form onsubmit="login(event)">
+    <form onsubmit="login(event)" id="login-form">
       <div class="form-group">
         <label class="form-label">Username</label>
         <input class="form-input" type="text" id="user_id" placeholder="Enter your username" autocomplete="off">
@@ -249,6 +249,12 @@
       </div>
       <button class="login-btn" type="submit">Login</button>
     </form>
+    <div id="approval-popup" style="display:none;text-align:center;padding:20px 0">
+      <div class="loading-icon" style="margin:0 auto 16px"></div>
+      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:8px;letter-spacing:1px">Waiting for approval</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.25);letter-spacing:.5px">The bot owner has been notified.<br>Please wait for them to approve your access.</div>
+      <div id="approval-status" style="font-size:10px;color:rgba(168,216,234,.4);margin-top:16px;letter-spacing:1px;text-transform:uppercase"></div>
+    </div>
   </div>
 </div>
 <script>
@@ -290,6 +296,8 @@ fetch('/api/session', { credentials: 'include' }).then(r => r.json()).then(data 
   if (data.authenticated) window.location.href = 'dashboard.html';
 });
 
+let pollTimer = null;
+
 async function login(e) {
   e.preventDefault();
   const uid = document.getElementById('user_id').value;
@@ -304,8 +312,10 @@ async function login(e) {
       body: JSON.stringify({ user_id: uid, key: key })
     });
     const data = await res.json();
-    if (data.success) {
-      window.location.href = 'dashboard.html';
+    if (data.success && data.approval_id) {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('approval-popup').style.display = 'block';
+      pollApproval(data.approval_id);
     } else {
       document.getElementById('error').textContent = data.error || 'Invalid credentials';
       document.getElementById('error').style.display = 'block';
@@ -314,6 +324,45 @@ async function login(e) {
     document.getElementById('error').textContent = 'Could not connect to server';
     document.getElementById('error').style.display = 'block';
   }
+}
+
+function pollApproval(id) {
+  const statusEl = document.getElementById('approval-status');
+  let dots = 0;
+  const dotTimer = setInterval(() => {
+    dots = (dots + 1) % 4;
+    statusEl.textContent = 'Checking' + '.'.repeat(dots);
+  }, 500);
+
+  async function check() {
+    try {
+      const r = await fetch('/api/approval?id=' + id, { credentials: 'include' });
+      const d = await r.json();
+      if (d.status === 'approved') {
+        clearInterval(dotTimer);
+        statusEl.textContent = 'Approved!';
+        statusEl.style.color = '#4ade80';
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+        return;
+      }
+      if (d.status === 'denied') {
+        clearInterval(dotTimer);
+        statusEl.textContent = 'Denied';
+        statusEl.style.color = '#ef4444';
+        setTimeout(() => {
+          document.getElementById('login-form').style.display = 'block';
+          document.getElementById('approval-popup').style.display = 'none';
+          document.getElementById('error').textContent = 'Access denied by owner';
+          document.getElementById('error').style.display = 'block';
+        }, 1500);
+        return;
+      }
+      pollTimer = setTimeout(check, 2000);
+    } catch (e) {
+      pollTimer = setTimeout(check, 3000);
+    }
+  }
+  check();
 }
 
 const canvas = document.getElementById('net');

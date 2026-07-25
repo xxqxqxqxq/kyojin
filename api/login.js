@@ -36,15 +36,6 @@ module.exports = async function handler(req, res) {
     });
 
     const result = await resp.json();
-
-    if (resp.ok && result.success) {
-      const sessionCookie = resp.headers.get('set-cookie');
-      if (sessionCookie) {
-        res.setHeader('Set-Cookie', sessionCookie);
-      }
-      return res.status(200).json({ success: true });
-    }
-
     return res.status(resp.status).json(result);
   } catch (e) {
     return res.status(500).json({ error: 'Bot server unreachable' });
