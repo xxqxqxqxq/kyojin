@@ -1,18 +1,11 @@
-const { verify, BOT_URL } = require('./_lib');
+const { BOT_URL } = require('./_lib');
 
 const BLOCKED = ['rm ', 'del ', 'format', 'shutdown', 'eval', 'exec', '__import__', 'subprocess', 'os.system'];
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const cookies = (req.headers.cookie || '').split(';').reduce((acc, c) => {
-    const [k, v] = c.trim().split('=');
-    if (k) acc[k] = v;
-    return acc;
-  }, {});
-
-  const session = verify(cookies.session);
-  if (!session) return res.status(401).json({ error: 'Unauthorized' });
+  const cookies = req.headers.cookie || '';
 
   let body = '';
   for await (const chunk of req) body += chunk;
@@ -31,11 +24,17 @@ module.exports = async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Cookie': cookies,
         'X-API-Key': process.env.BOT_API_KEY || '',
       },
       body: JSON.stringify({ command }),
     });
     const result = await resp.json();
+
+    if (resp.status === 401) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     return res.status(200).json(result);
   } catch (e) {
     return res.status(500).json({ error: 'Bot server unreachable. Is it online?' });

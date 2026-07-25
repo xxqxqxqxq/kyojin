@@ -1,4 +1,4 @@
-const { verify, BOT_URL } = require('./_lib');
+const { BOT_URL } = require('./_lib');
 
 const RATE_LIMITS = {};
 
