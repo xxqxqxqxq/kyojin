@@ -88,11 +88,11 @@
   .panel {
     width: 520px;
     background: rgba(16, 19, 27, 0.92);
-    border: 1px solid rgba(168, 216, 234, 0.1);
+    border: 1px solid rgba(168, 216, 234, 0.12);
     border-radius: 12px;
     padding: 36px 32px;
     backdrop-filter: blur(30px);
-    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 0 0 1px rgba(168, 216, 234, 0.1);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(168, 216, 234, 0.12);
     position: relative;
     transform: perspective(600px) rotateY(-6deg) rotateX(2deg);
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease;
@@ -100,11 +100,11 @@
   .panel::before {
     content: '';
     position: absolute;
-    inset: -18px;
-    border-radius: 24px;
-    background: rgba(168, 216, 234, 0.08);
-    filter: blur(22px);
-    opacity: 0.5;
+    inset: -14px;
+    border-radius: 22px;
+    background: rgba(168, 216, 234, 0.15);
+    filter: blur(14px);
+    opacity: 0.45;
     pointer-events: none;
     z-index: -1;
     animation: panelGlow 8s ease-in-out infinite;
