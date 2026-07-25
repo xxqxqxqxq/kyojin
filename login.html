@@ -285,14 +285,8 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ===== CONFIG =====
-const API_URL = window.location.hostname === "localhost"
-  ? "http://localhost:5000"
-  : "https://YOUR_RAILWAY_URL.railway.app";
-// ==================
-
 // ===== SESSION CHECK =====
-fetch(API_URL + '/api/session', { credentials: 'include' }).then(r => r.json()).then(data => {
+fetch('/api/session', { credentials: 'include' }).then(r => r.json()).then(data => {
   if (data.authenticated) window.location.href = 'dashboard.html';
 });
 
@@ -303,7 +297,7 @@ async function login(e) {
   document.getElementById('error').style.display = 'none';
 
   try {
-    const res = await fetch(API_URL + '/api/login', {
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

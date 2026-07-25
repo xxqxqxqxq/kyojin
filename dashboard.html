@@ -277,14 +277,10 @@ body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-fon
 </div>
 
 <script>
-const API_URL = window.location.hostname === "localhost"
-  ? "http://localhost:5000"
-  : "https://YOUR_RAILWAY_URL.railway.app";
-
 // Auth
 async function checkAuth() {
   try {
-    const res = await fetch(API_URL + '/api/session', { credentials: 'include' });
+    const res = await fetch('/api/session', { credentials: 'include' });
     const data = await res.json();
     if (!data.authenticated) { window.location.href = 'login.html'; return; }
     document.getElementById('user-display').textContent = data.username;
@@ -293,7 +289,7 @@ async function checkAuth() {
 checkAuth();
 
 async function logout() {
-  await fetch(API_URL + '/api/logout', { method: 'POST', credentials: 'include' });
+  await fetch('/api/logout', { method: 'POST', credentials: 'include' });
   window.location.href = 'login.html';
 }
 
@@ -327,7 +323,7 @@ async function runCommand() {
   addHTML(`<span class="prompt">&gt;</span> ${cmd}`);
   input.value = '';
   try {
-    const res = await fetch(API_URL + '/api/command', {
+    const res = await fetch('/api/command', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
