@@ -190,7 +190,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           <div class="card-header"><span class="card-title">Global</span></div>
           <div class="card-body">
             <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-enabled"><span></span></div></div>
-            <div class="row"><span class="row-label">Window (seconds)</span><input class="input" style="width:60px;text-align:center" id="an-window" value="30"></div>
+            <div class="row"><span class="row-label">Window (seconds)</span><input class="input" style="width:60px;text-align:center" id="an-window" value="5"></div>
           </div>
         </div>
         <div class="cat-tabs" id="an-tabs">
@@ -319,8 +319,8 @@ function setToggle(el,on){if(!el)return;if(on)el.classList.add('on');else el.cla
 function isOn(el){return el.classList.contains('on')}
 
 // ===== TOAST =====
-let saveTimer=null;
-function save(key,val){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value:val})});showToast('Saved')}catch(e){showToast('Error')}},400)}
+let saveTimers={};
+function save(key,val){clearTimeout(saveTimers[key]);saveTimers[key]=setTimeout(async()=>{try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({key,value:val})});showToast('Saved')}catch(e){showToast('Error')}},400)}
 
 // ===== AUTH =====
 let authed=false;
@@ -360,7 +360,7 @@ $$('.cat-tabs').forEach(function(bar){
 
 // ===== TOGGLES (global) =====
 $('an-enabled').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.enabled',isOn(this))});
-$('an-window').addEventListener('change',function(){save('antinuke.window_seconds',parseInt(this.value)||30)});
+$('an-window').addEventListener('change',function(){save('antinuke.window_seconds',parseInt(this.value)||5)});
 
 // ===== ANTI-NUKE EVENT TOGGLES =====
 $$('.toggle[data-evt]').forEach(function(el){
@@ -457,7 +457,7 @@ async function loadSettings(){
 
     var an=d.antinuke||{};
     setToggle($('an-enabled'),an.enabled);
-    $('an-window').value=an.window_seconds||30;
+    $('an-window').value=an.window_seconds||5;
 
     var ev=an.events||{};
     $$('.toggle[data-evt]').forEach(function(tgl){
