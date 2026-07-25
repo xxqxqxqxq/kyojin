@@ -1,8 +1,0 @@
-{
-  "bot_token": "YOUR_BOT_TOKEN",
-  "client_id": "YOUR_CLIENT_ID",
-  "client_secret": "YOUR_CLIENT_SECRET",
-  "guild_id": "YOUR_GUILD_ID",
-  "verify_role_id": "YOUR_ROLE_ID",
-  "redirect_uri": "https://YOUR_GITHUB_PAGES_URL/"
-}
