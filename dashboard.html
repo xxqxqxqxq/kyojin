@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jinn - Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0e1117;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    height: 48px;
+    background: rgba(10, 12, 18, 0.95);
+    border-bottom: 1px solid rgba(168, 216, 234, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+  .nav-left { display: flex; align-items: center; gap: 10px; }
+  .nav-icon { width: 24px; height: 24px; border-radius: 50%; }
+  .nav-name { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-btn {
+    font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3); text-decoration: none; cursor: pointer;
+    transition: color 0.2s; background: none; border: none; font-family: 'Inter', sans-serif;
+  }
+  .nav-btn:hover { color: #a8d8ea; }
+
+  /* LAYOUT */
+  .layout {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 200px;
+    background: rgba(10, 12, 18, 0.95);
+    border-right: 1px solid rgba(168, 216, 234, 0.06);
+    padding: 16px 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-label {
+    font-size: 9px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px 6px;
+  }
+  .sidebar-item {
+    padding: 8px 16px;
+    font-size: 12px; color: rgba(255, 255, 255, 0.35);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar-item:hover { color: #ffffff; background: rgba(168, 216, 234, 0.04); }
+  .sidebar-item.active { color: #a8d8ea; background: rgba(168, 216, 234, 0.06); border-right: 2px solid #a8d8ea; }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: rgba(10, 12, 18, 0.95);
+    border-bottom: 1px solid rgba(168, 216, 234, 0.06);
+    padding: 0 12px;
+    flex-shrink: 0;
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 11px; color: rgba(255, 255, 255, 0.3);
+    cursor: pointer; transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .tab:hover { color: rgba(255, 255, 255, 0.6); }
+  .tab.active { color: #a8d8ea; border-bottom-color: #a8d8ea; }
+
+  /* PANELS */
+  .panel-area {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+  }
+  .panel-page { display: none; }
+  .panel-page.active { display: block; }
+
+  /* SETTINGS */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .setting-card {
+    background: rgba(16, 19, 27, 0.8);
+    border: 1px solid rgba(168, 216, 234, 0.06);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .setting-title {
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    color: #ffffff; margin-bottom: 4px;
+  }
+  .setting-desc {
+    font-size: 11px; color: rgba(255, 255, 255, 0.25); margin-bottom: 12px;
+  }
+  .setting-input {
+    width: 100%;
+    padding: 8px 12px;
+    background: rgba(168, 216, 234, 0.04);
+    border: 1px solid rgba(168, 216, 234, 0.1);
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    outline: none;
+  }
+  .setting-input:focus { border-color: rgba(168, 216, 234, 0.3); }
+
+  /* CONSOLE */
+  .console {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .console-output {
+    flex: 1;
+    background: rgba(8, 10, 14, 0.95);
+    border: 1px solid rgba(168, 216, 234, 0.06);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    overflow-y: auto;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .console-output .line { margin-bottom: 2px; }
+  .console-output .line.info { color: #a8d8ea; }
+  .console-output .line.error { color: #e74c3c; }
+  .console-output .line.success { color: #43b581; }
+  .console-output .line .prompt { color: rgba(168, 216, 234, 0.4); }
+  .console-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .console-input {
+    flex: 1;
+    padding: 10px 14px;
+    background: rgba(8, 10, 14, 0.95);
+    border: 1px solid rgba(168, 216, 234, 0.1);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+  .console-input:focus { border-color: rgba(168, 216, 234, 0.3); }
+  .console-run {
+    padding: 10px 20px;
+    background: rgba(168, 216, 234, 0.1);
+    border: 1px solid rgba(168, 216, 234, 0.2);
+    border-radius: 8px;
+    color: #a8d8ea;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .console-run:hover { background: rgba(168, 216, 234, 0.18); }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <img class="nav-icon" src="icon.png" alt="">
+    <span class="nav-name">JINN</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-btn" id="user-display"></span>
+    <button class="nav-btn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-label">Management</div>
+    <div class="sidebar-item active" data-page="console">Console</div>
+    <div class="sidebar-item" data-page="settings">Settings</div>
+    <div class="sidebar-label">Bot</div>
+    <div class="sidebar-item" data-page="whitelist">Whitelist</div>
+    <div class="sidebar-item" data-page="antinuke">Anti-Nuke</div>
+    <div class="sidebar-item" data-page="logs">Logs</div>
+  </div>
+
+  <div class="main">
+    <div class="tabs">
+      <div class="tab active" data-page="console">Console</div>
+      <div class="tab" data-page="settings">Settings</div>
+    </div>
+
+    <div class="panel-area">
+      <!-- CONSOLE -->
+      <div class="panel-page active" id="page-console">
+        <div class="console">
+          <div class="console-output" id="console-output">
+            <div class="line info">Jinn Security Bot - Console</div>
+            <div class="line" style="color:rgba(255,255,255,0.2)">Type commands below. Output appears here.</div>
+            <div class="line">&nbsp;</div>
+          </div>
+          <div class="console-input-row">
+            <input class="console-input" id="console-input" placeholder="Enter command..." autocomplete="off">
+            <button class="console-run" onclick="runCommand()">Run</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="panel-page" id="page-settings">
+        <div class="settings-grid">
+          <div class="setting-card">
+            <div class="setting-title">Prefix</div>
+            <div class="setting-desc">Command prefix for the bot</div>
+            <input class="setting-input" value=",">
+          </div>
+          <div class="setting-card">
+            <div class="setting-title">Allowed Guild</div>
+            <div class="setting-desc">Server ID the bot operates in</div>
+            <input class="setting-input" value="1529582624635359402">
+          </div>
+          <div class="setting-card">
+            <div class="setting-title">Verify Role</div>
+            <div class="setting-desc">Role given after verification</div>
+            <input class="setting-input" value="1530245821184999626">
+          </div>
+          <div class="setting-card">
+            <div class="setting-title">Legacy Role</div>
+            <div class="setting-desc">Legacy whitelist role</div>
+            <input class="setting-input" value="1529995268542566522">
+          </div>
+        </div>
+      </div>
+
+      <!-- WHITELIST -->
+      <div class="panel-page" id="page-whitelist">
+        <div class="setting-card" style="max-width:500px">
+          <div class="setting-title">Whitelist</div>
+          <div class="setting-desc">Manage whitelisted users</div>
+          <div class="console-output" style="height:200px;margin-bottom:12px">Loading...</div>
+        </div>
+      </div>
+
+      <!-- ANTI-NUKE -->
+      <div class="panel-page" id="page-antinuke">
+        <div class="settings-grid">
+          <div class="setting-card">
+            <div class="setting-title">Enabled</div>
+            <div class="setting-desc">Toggle anti-nuke protection</div>
+            <input class="setting-input" value="true">
+          </div>
+          <div class="setting-card">
+            <div class="setting-title">Window (seconds)</div>
+            <div class="setting-desc">Time window for detection</div>
+            <input class="setting-input" value="5">
+          </div>
+          <div class="setting-card">
+            <div class="setting-title">Threshold</div>
+            <div class="setting-desc">Actions before trigger</div>
+            <input class="setting-input" value="1">
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGS -->
+      <div class="panel-page" id="page-logs">
+        <div class="setting-card" style="max-width:700px">
+          <div class="setting-title">Recent Logs</div>
+          <div class="console-output" style="height:400px">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Auth check via session
+async function checkAuth() {
+  try {
+    const res = await fetch('/api/session');
+    const data = await res.json();
+    if (!data.authenticated) {
+      window.location.href = 'login.html';
+      return;
+    }
+    document.getElementById('user-display').textContent = data.username;
+  } catch (e) {
+    window.location.href = 'login.html';
+  }
+}
+checkAuth();
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  window.location.href = 'login.html';
+}
+
+// Navigation
+document.querySelectorAll('.sidebar-item, .tab').forEach(el => {
+  el.addEventListener('click', () => {
+    const page = el.dataset.page;
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll(`[data-page="${page}"]`).forEach(i => i.classList.add('active'));
+    document.getElementById('page-' + page).classList.add('active');
+  });
+});
+
+// Console
+const output = document.getElementById('console-output');
+const input = document.getElementById('console-input');
+const API_URL = window.location.origin;
+
+function addLine(text, type = '') {
+  const line = document.createElement('div');
+  line.className = 'line' + (type ? ' ' + type : '');
+  line.textContent = text;
+  output.appendChild(line);
+  output.scrollTop = output.scrollHeight;
+}
+
+function addHTML(html) {
+  const div = document.createElement('div');
+  div.className = 'line';
+  div.innerHTML = html;
+  output.appendChild(div);
+  output.scrollTop = output.scrollHeight;
+}
+
+async function runCommand() {
+  const cmd = input.value.trim();
+  if (!cmd) return;
+
+  addHTML(`<span class="prompt">&gt;</span> ${cmd}`);
+  input.value = '';
+
+  try {
+    const res = await fetch(API_URL + '/api/command', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: cmd })
+    });
+    const data = await res.json();
+    if (data.output) {
+      data.output.split('\n').forEach(line => addLine(line));
+    }
+    if (data.error) {
+      addLine(data.error, 'error');
+    }
+  } catch (e) {
+    addLine('Could not connect to server', 'error');
+  }
+}
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') runCommand();
+});
+</script>
+</body>
+</html>

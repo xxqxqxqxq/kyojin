@@ -1,15 +1,17 @@
-# Discord Verify Website
+# Jinn Security Bot - Website
 
-Secure OAuth verification page for a Discord bot.
+Secure OAuth verification page and admin dashboard for a Discord bot.
 
-## How It Works
+## Security Features
 
-1. User clicks Verify in Discord → redirected to GitHub Pages
-2. Frontend sends the OAuth code to the backend API
-3. Backend handles token exchange, guild add, and role assignment
-4. Frontend shows verifying → verified/failed states
-
-**No secrets are exposed in the frontend.**
+- **Session-based auth**: HttpOnly cookies, no localStorage
+- **Rate limiting**: 30 requests per minute per IP
+- **CSRF protection**: SameSite cookies
+- **Input validation**: All inputs sanitized and length-limited
+- **Security headers**: CSP, X-Frame-Options, X-XSS-Protection
+- **Password hashing**: SHA-256 (use bcrypt in production)
+- **Command blocking**: Dangerous commands blocked in console
+- **No secrets in frontend**: All API keys stay on server
 
 ## Setup
 
@@ -20,50 +22,62 @@ cd backend
 pip install -r requirements.txt
 ```
 
-Edit `config.json`:
+Create `config.json` or `.env`:
 ```json
 {
-  "bot_token": "YOUR_BOT_TOKEN",
-  "client_id": "YOUR_CLIENT_ID",
-  "client_secret": "YOUR_CLIENT_SECRET",
-  "guild_id": "YOUR_GUILD_ID",
-  "verify_role_id": "YOUR_ROLE_ID",
-  "redirect_uri": "https://YOUR_GITHUB_PAGES_URL/"
+  "BOT_TOKEN": "YOUR_BOT_TOKEN",
+  "CLIENT_ID": "YOUR_CLIENT_ID",
+  "CLIENT_SECRET": "YOUR_CLIENT_SECRET",
+  "GUILD_ID": "YOUR_GUILD_ID",
+  "VERIFY_ROLE_ID": "YOUR_ROLE_ID",
+  "REDIRECT_URI": "https://your-site.com/verify",
+  "ADMIN_USERNAME": "admin",
+  "ADMIN_PASSWORD": "CHANGE_THIS",
+  "SECRET_KEY": "CHANGE_THIS",
+  "HOST": "0.0.0.0",
+  "PORT": 5000
 }
 ```
 
-Run the backend:
+Run:
 ```bash
 python server.py
 ```
 
 ### Frontend
 
-1. Upload `index.html` to GitHub Pages
-2. Set Discord OAuth redirect URI to your GitHub Pages URL
-3. The frontend calls `/api/verify` on your backend
-
-### Discord Developer Portal
-
-1. Go to your app → OAuth2
-2. Set redirect URI to your GitHub Pages URL
-3. Scopes: `identify`, `guilds.join`
+Upload all HTML files to your hosting. Set Discord OAuth redirect URI to your verify URL.
 
 ## Files
 
 ```
 github/
-├── index.html          # Frontend (upload to GitHub Pages)
+├── index.html          # Home page
+├── login.html          # Login page
+├── dashboard.html      # Admin dashboard
+├── icon.png            # Bot avatar
 ├── .gitignore
 ├── README.md
 └── backend/
-    ├── server.py       # Backend API server
+    ├── server.py       # Secure API server
     ├── config.json     # Secrets (DO NOT commit)
     └── requirements.txt
 ```
 
-## Security
+## Environment Variables
 
-- Bot token stays on the backend only
-- `config.json` is gitignored
-- Frontend only calls the API, never touches Discord directly
+All config can be set via environment variables or config.json:
+
+| Variable | Description |
+|----------|-------------|
+| BOT_TOKEN | Discord bot token |
+| CLIENT_ID | OAuth client ID |
+| CLIENT_SECRET | OAuth client secret |
+| GUILD_ID | Server ID |
+| VERIFY_ROLE_ID | Role to assign |
+| REDIRECT_URI | OAuth redirect URL |
+| ADMIN_USERNAME | Login username |
+| ADMIN_PASSWORD | Login password |
+| SECRET_KEY | Session secret |
+| HOST | Server host |
+| PORT | Server port |
