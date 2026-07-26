@@ -185,6 +185,15 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .input-row{display:flex;align-items:center;gap:8px}
 .input-row .input{flex:1}
 
+/* EDIT ICON */
+.edit-icon{cursor:pointer;color:rgba(168,216,234,.25);transition:all .15s;font-size:12px;padding:2px 4px;border-radius:4px}
+.edit-icon:hover{color:#a8d8ea;background:rgba(168,216,234,.08)}
+.guild-edit-row{display:flex;align-items:center;gap:8px}
+.guild-edit-input{display:none;width:150px}
+.guild-edit-row.editing .row-value{display:none}
+.guild-edit-row.editing .guild-edit-input{display:block}
+.guild-edit-row.editing .edit-icon{display:none}
+
 /* ANTI-NUKE SUBTABS - vertical sidebar within page */
 .an-layout{display:flex;gap:16px;min-height:400px}
 .an-sidebar{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
@@ -205,6 +214,24 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .an-wl-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(168,216,234,.02);border-bottom:1px solid rgba(168,216,234,.04)}
 .an-wl-head .an-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);letter-spacing:.03em}
 .an-wl-body{padding:10px 18px}
+
+/* LOG LIST */
+.log-list{max-height:500px;overflow-y:auto;padding:4px 0}
+.log-list::-webkit-scrollbar{width:3px}
+.log-list::-webkit-scrollbar-thumb{background:rgba(168,216,234,.1);border-radius:2px}
+.log-entry{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.015);transition:background .15s}
+.log-entry:hover{background:rgba(168,216,234,.02)}
+.log-entry:last-child{border-bottom:none}
+.log-entry-avatar{width:28px;height:28px;border-radius:50%;border:1px solid rgba(168,216,234,.08);object-fit:cover;flex-shrink:0}
+.log-entry-body{flex:1;min-width:0}
+.log-entry-header{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.log-entry-user{font-size:11px;font-weight:600;color:rgba(255,255,255,.6)}
+.log-entry-time{font-size:9px;color:rgba(168,216,234,.25);font-family:'JetBrains Mono',monospace}
+.log-entry-text{font-size:11px;color:rgba(255,255,255,.3);line-height:1.5}
+.log-entry-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-right:4px}
+.log-entry-tag.security{background:rgba(239,68,68,.1);color:rgba(239,68,68,.6);border:1px solid rgba(239,68,68,.12)}
+.log-entry-tag.command{background:rgba(168,216,234,.08);color:rgba(168,216,234,.5);border:1px solid rgba(168,216,234,.1)}
+.log-entry-tag.info{background:rgba(74,222,128,.08);color:rgba(74,222,128,.5);border:1px solid rgba(74,222,128,.1)}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:4px}
@@ -279,7 +306,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
             <div class="card-header"><span class="card-title">General</span></div>
             <div class="card-body">
               <div class="row"><span class="row-label">Prefix</span><input class="input" style="width:50px;text-align:center" id="s-prefix" value=","></div>
-              <div class="row"><span class="row-label">Guild ID</span><span class="row-value" id="s-guild-id">&mdash;</span></div>
+              <div class="row"><span class="row-label">Guild ID</span><div class="guild-edit-row" id="guild-edit-row"><span class="row-value" id="s-guild-id">&mdash;</span><input class="input guild-edit-input" id="s-guild-id-input" placeholder="Guild ID" style="width:150px"><span class="edit-icon" id="guild-edit-btn">&#9998;</span></div></div>
               <div class="row"><span class="row-label">Members</span><span class="row-value" id="s-members">&mdash;</span></div>
             </div>
           </div>
@@ -308,10 +335,67 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
       <!-- LOGS -->
       <div class="panel-page" id="page-logs">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Logs</span></div>
-          <div class="card-body">
-            <div class="row"><span class="row-label">Coming soon</span><span class="row-value" style="color:rgba(255,255,255,.15)"></span></div>
+        <div class="an-layout">
+          <div class="an-sidebar" id="log-sidebar">
+            <div class="an-sidebar-item active" data-an="security">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
+              <span>Security</span>
+            </div>
+            <div class="an-sidebar-item" data-an="botusage">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""></div>
+              <span>Bot Usage</span>
+            </div>
+            <div class="an-sidebar-item" data-an="regular">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
+              <span>Regular</span>
+            </div>
+          </div>
+
+          <div class="an-main">
+            <!-- SECURITY -->
+            <div class="an-panel-content active" data-an-content="security">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Security Logs</div><div class="an-sub">Bot add attempts, command spam, unauthorized access</div></div>
+                </div>
+                <div class="an-body">
+                  <div class="log-list" id="log-security">
+                    <div class="wl-empty">No security events yet</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BOT USAGE -->
+            <div class="an-panel-content" data-an-content="botusage">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Bot Usage Logs</div><div class="an-sub">Command execution, user interactions</div></div>
+                </div>
+                <div class="an-body">
+                  <div class="log-list" id="log-botusage">
+                    <div class="wl-empty">No command usage yet</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- REGULAR -->
+            <div class="an-panel-content" data-an-content="regular">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Regular Logs</div><div class="an-sub">Deleted messages, edited messages, server changes</div></div>
+                </div>
+                <div class="an-body">
+                  <div class="log-list" id="log-regular">
+                    <div class="wl-empty">No regular logs yet</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -686,10 +770,12 @@ $$('.sidebar-item').forEach(function(el){
 $$('.an-sidebar-item').forEach(function(item){
   item.addEventListener('click',function(){
     var cat=this.getAttribute('data-an');
-    $$('.an-sidebar-item').forEach(function(i){i.classList.remove('active')});
+    var sidebar=this.closest('.an-sidebar');
+    sidebar.querySelectorAll('.an-sidebar-item').forEach(function(i){i.classList.remove('active')});
     this.classList.add('active');
-    $$('.an-panel-content').forEach(function(c){c.classList.remove('active')});
-    var target=document.querySelector('.an-panel-content[data-an-content="'+cat+'"]');
+    var layout=this.closest('.an-layout');
+    layout.querySelectorAll('.an-panel-content').forEach(function(c){c.classList.remove('active')});
+    var target=layout.querySelector('.an-panel-content[data-an-content="'+cat+'"]');
     if(target)target.classList.add('active');
   });
 });
@@ -735,11 +821,8 @@ function renderAnWl(ids,userInfo){
   if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
   userInfo=userInfo||{};
   c.innerHTML=ids.map(function(uid){
-    var u=userInfo[uid];
-    if(u){
-      return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
-    }
-    return '<div class="wl-user"><div class="wl-user-info"><div class="wl-user-name">Unknown User</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+    var u=userInfo[uid]||{display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(uid%5)+'.png'};
+    return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
   }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){
     var uid=this.getAttribute('data-uid');
@@ -778,16 +861,33 @@ function previewGif(inputId,imgId){var url=$(inputId).value.trim();var img=$(img
 
 $('s-prefix').addEventListener('change',function(){save('prefix',this.value||',')});
 
+$('guild-edit-btn').addEventListener('click',function(){
+  var row=$('guild-edit-row');
+  row.classList.add('editing');
+  var input=$('s-guild-id-input');
+  input.value=$('s-guild-id').textContent;
+  input.focus();
+  input.select();
+});
+$('s-guild-id-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var val=this.value.trim();
+    if(val){save('allowed_guild_id',parseInt(val)||val);showToast('Guild saved');$('s-guild-id').textContent=val}
+    $('guild-edit-row').classList.remove('editing');
+  }
+  if(e.key==='Escape'){$('guild-edit-row').classList.remove('editing')}
+});
+$('s-guild-id-input').addEventListener('blur',function(){
+  $('guild-edit-row').classList.remove('editing');
+});
+
 function renderWl(id,users,userInfo){
   var c=$(id);
   if(!users||!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
   userInfo=userInfo||{};
   c.innerHTML=users.map(function(uid){
-    var u=userInfo[uid];
-    if(u){
-      return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
-    }
-    return '<div class="wl-user"><div class="wl-user-info"><div class="wl-user-name">Unknown User</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+    var u=userInfo[uid]||{display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(uid%5)+'.png'};
+    return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
   }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeWl(this.getAttribute('data-uid'))})});
 }
@@ -807,11 +907,8 @@ function renderBl(ids,userInfo){
   if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users blacklisted</div>';return}
   userInfo=userInfo||{};
   c.innerHTML=ids.map(function(uid){
-    var u=userInfo[uid];
-    if(u){
-      return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
-    }
-    return '<div class="wl-user"><div class="wl-user-info"><div class="wl-user-name">Unknown User</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+    var u=userInfo[uid]||{display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(uid%5)+'.png'};
+    return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
   }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeBl(this.getAttribute('data-uid'))})});
 }
@@ -920,7 +1017,30 @@ async function loadSettings(){
     renderWl('wl-std-list',d.whitelist_standard||[],d.user_info||{});
     renderWl('wl-leg-list',d.whitelist_legacy||[],d.user_info||{});
     renderBl(d.blacklist||[],d.user_info||{});
+    loadLogs();
   }catch(e){console.error(e)}
+}
+
+async function loadLogs(){
+  try{
+    var r=await fetch('/api/logs',{credentials:'include'});
+    var d=await r.json();
+    if(d.error)return;
+    renderLogList('log-security',d.security||[]);
+    renderLogList('log-botusage',d.bot_usage||[]);
+    renderLogList('log-regular',d.regular||[]);
+  }catch(e){}
+}
+
+function renderLogList(cid,entries){
+  var c=$(cid);
+  if(!entries||!entries.length){c.innerHTML='<div class="wl-empty">No entries yet</div>';return}
+  c.innerHTML=entries.map(function(e){
+    var avatar=e.avatar||'https://cdn.discordapp.com/embed/avatars/0.png';
+    var tagClass=e.type==='security'?'security':e.type==='command'?'command':'info';
+    var tagLabel=e.type==='security'?'SECURITY':e.type==='command'?'CMD':'LOG';
+    return '<div class="log-entry"><img class="log-entry-avatar" src="'+avatar+'" alt=""><div class="log-entry-body"><div class="log-entry-header"><span class="log-entry-tag '+tagClass+'">'+tagLabel+'</span><span class="log-entry-user">'+(e.user||'System')+'</span><span class="log-entry-time">'+(e.time||'')+'</span></div><div class="log-entry-text">'+(e.text||'')+'</div></div></div>';
+  }).join('');
 }
 
 checkAuth().then(function(){
