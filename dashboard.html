@@ -885,16 +885,18 @@ function renderAnWl(ids,userInfo){
   if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
   userInfo=userInfo||window._allUserInfo||{};
   c.innerHTML=ids.map(function(uid){
+    uid=String(uid);
     var u=userInfo[uid];
     if(!u){
-      var avIdx=uid%5;
+      var lastDigit=parseInt(uid.charAt(uid.length-1),10)||0;
+      var avIdx=lastDigit%5;
       u={display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+avIdx+'.png'};
     }
     return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
   }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){
-    var uid=this.getAttribute('data-uid');
-    var currentIds=(window._anWlIds||[]).filter(function(id){return id!==uid});
+    var uid=String(this.getAttribute('data-uid'));
+    var currentIds=(window._anWlIds||[]).map(function(id){return String(id)}).filter(function(id){return id!==uid});
     window._anWlIds=currentIds;
     save('antinuke.whitelist',currentIds);
     renderAnWl(currentIds,userInfo);
@@ -902,8 +904,8 @@ function renderAnWl(ids,userInfo){
   })});
 }
 $('an-wl-add-btn').addEventListener('click',async function(){
-  var input=$('an-wl-add');var uid=input.value.trim();if(!uid)return;
-  var currentIds=window._anWlIds||[];
+  var input=$('an-wl-add');var uid=String(input.value.trim());if(!uid)return;
+  var currentIds=(window._anWlIds||[]).map(function(id){return String(id)});
   if(currentIds.indexOf(uid)!==-1){showToast('Already whitelisted');return}
   currentIds.push(uid);
   window._anWlIds=currentIds;
@@ -954,7 +956,9 @@ function renderWl(id,users,userInfo){
   if(!users||!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
   userInfo=userInfo||{};
   c.innerHTML=users.map(function(uid){
-    var u=userInfo[uid]||{display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(uid%5)+'.png'};
+    uid=String(uid);
+    var u=userInfo[uid];
+    if(!u){var lastDigit=parseInt(uid.charAt(uid.length-1),10)||0;u={display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(lastDigit%5)+'.png'}}
     return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
   }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeWl(this.getAttribute('data-uid'))})});
@@ -975,7 +979,9 @@ function renderBl(ids,userInfo){
   if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users blacklisted</div>';return}
   userInfo=userInfo||{};
   c.innerHTML=ids.map(function(uid){
-    var u=userInfo[uid]||{display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(uid%5)+'.png'};
+    uid=String(uid);
+    var u=userInfo[uid];
+    if(!u){var lastDigit=parseInt(uid.charAt(uid.length-1),10)||0;u={display:uid,avatar:'https://cdn.discordapp.com/embed/avatars/'+(lastDigit%5)+'.png'}}
     return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
   }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeBl(this.getAttribute('data-uid'))})});
