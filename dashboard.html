@@ -244,6 +244,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
     <div class="sidebar-label">Core</div>
     <div class="sidebar-item active" data-page="console">Console</div>
     <div class="sidebar-item" data-page="settings">Settings</div>
+    <div class="sidebar-item" data-page="logs">Logs</div>
     <div class="sidebar-label">Protection</div>
     <div class="sidebar-item" data-page="antinuke">Anti-Nuke</div>
     <div class="sidebar-item" data-page="whitelist">Whitelist</div>
@@ -288,6 +289,29 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
               <div class="row"><span class="row-label">Verify Role</span><input class="input" style="width:150px" id="s-verify-role" placeholder="Role ID"></div>
               <div class="row"><span class="row-label">Legacy Role</span><input class="input" style="width:150px" id="s-legacy-role" placeholder="Role ID"></div>
             </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="card-header"><span class="card-title">Server Stats</span></div>
+          <div class="card-body">
+            <div class="row"><span class="row-label">Server Name</span><span class="row-value" id="stats-name">&mdash;</span></div>
+            <div class="row"><span class="row-label">Server ID</span><span class="row-value" id="stats-id">&mdash;</span></div>
+            <div class="row"><span class="row-label">Members</span><span class="row-value" id="stats-members">&mdash;</span></div>
+            <div class="row"><span class="row-label">Roles</span><span class="row-value" id="stats-roles">&mdash;</span></div>
+            <div class="row"><span class="row-label">Channels</span><span class="row-value" id="stats-channels">&mdash;</span></div>
+            <div class="row"><span class="row-label">Emojis</span><span class="row-value" id="stats-emojis">&mdash;</span></div>
+            <div class="row"><span class="row-label">Boost Level</span><span class="row-value" id="stats-boost">&mdash;</span></div>
+            <div class="row"><span class="row-label">Boost Count</span><span class="row-value" id="stats-boost-count">&mdash;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGS -->
+      <div class="panel-page" id="page-logs">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Logs</span></div>
+          <div class="card-body">
+            <div class="row"><span class="row-label">Coming soon</span><span class="row-value" style="color:rgba(255,255,255,.15)"></span></div>
           </div>
         </div>
       </div>
@@ -341,7 +365,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
               <div class="an-sb-dot off" data-an-dot="lockdown"></div>
             </div>
             <div class="an-sidebar-item" data-an="whitelist">
-              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530954537530032290.png" alt=""></div>
               <span>Whitelist</span>
             </div>
           </div>
@@ -677,8 +701,11 @@ $$('.toggle[data-evt]').forEach(function(el){
   el.addEventListener('click',function(){
     this.classList.toggle('on');
     save('antinuke.events.'+this.getAttribute('data-evt')+'.enabled',isOn(this));
-    var dot=document.querySelector('.an-dot[data-status="'+this.getAttribute('data-evt')+'"]');
+    var evtName=this.getAttribute('data-evt');
+    var dot=document.querySelector('.an-dot[data-status="'+evtName+'"]');
     if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}
+    var sbDot=document.querySelector('.an-sb-dot[data-an-dot="'+evtName+'"]');
+    if(sbDot){sbDot.classList.toggle('on',isOn(this));sbDot.classList.toggle('off',!isOn(this))}
   });
 });
 
@@ -698,7 +725,7 @@ $$('.punish-select[data-evt]').forEach(function(sel){
   });
 });
 
-$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this));var dot=document.querySelector('.an-dot[data-status="lockdown"]');if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}});
+$('an-lockdown').addEventListener('click',function(){this.classList.toggle('on');save('antinuke.massban_lockdown.enabled',isOn(this));var dot=document.querySelector('.an-dot[data-status="lockdown"]');if(dot){dot.classList.toggle('on',isOn(this));dot.classList.toggle('off',!isOn(this))}var sbDot=document.querySelector('.an-sb-dot[data-an-dot="lockdown"]');if(sbDot){sbDot.classList.toggle('on',isOn(this));sbDot.classList.toggle('off',!isOn(this))}});
 $('an-lockdown-th').addEventListener('change',function(){save('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)});
 $('an-lockdown-role').addEventListener('change',function(){save('antinuke.massban_lockdown.access_role_id',this.value||null)});
 $('an-ping-channels').addEventListener('change',function(){save('antinuke.ping_channel_whitelist',this.value.split(',').map(function(s){return parseInt(s.trim())}).filter(Boolean))});
@@ -825,6 +852,17 @@ async function loadSettings(){
     $('s-guild-id').textContent=d.guild?d.guild.id:'—';
     $('s-members').textContent=d.guild?d.guild.member_count:'—';
 
+    if(d.guild){
+      $('stats-name').textContent=d.guild.name||'—';
+      $('stats-id').textContent=d.guild.id||'—';
+      $('stats-members').textContent=d.guild.member_count||'—';
+      $('stats-roles').textContent=d.guild.role_count!=null?d.guild.role_count:'—';
+      $('stats-channels').textContent=d.guild.channel_count!=null?d.guild.channel_count:'—';
+      $('stats-emojis').textContent=d.guild.emoji_count!=null?d.guild.emoji_count:'—';
+      $('stats-boost').textContent=d.guild.premium_tier!=null?'Tier '+d.guild.premium_tier:'None';
+      $('stats-boost-count').textContent=d.guild.premium_subscription_count||'0';
+    }
+
     var an=d.antinuke||{};
     setToggle($('an-enabled'),an.enabled);
     $('an-window').value=an.window_seconds||5;
@@ -834,8 +872,11 @@ async function loadSettings(){
       var evt=evts[el.getAttribute('data-evt')];
       var on=evt&&typeof evt==='object'?evt.enabled:!!evt;
       setToggle(el,on);
-      var dot=document.querySelector('.an-dot[data-status="'+el.getAttribute('data-evt')+'"]');
+      var evtName=el.getAttribute('data-evt');
+      var dot=document.querySelector('.an-dot[data-status="'+evtName+'"]');
       if(dot){dot.classList.toggle('on',on);dot.classList.toggle('off',!on)}
+      var sbDot=document.querySelector('.an-sb-dot[data-an-dot="'+evtName+'"]');
+      if(sbDot){sbDot.classList.toggle('on',on);sbDot.classList.toggle('off',!on)}
     });
     $$('.evt-input').forEach(function(inp){
       var evt=evts[inp.getAttribute('data-evt')];
@@ -854,6 +895,8 @@ async function loadSettings(){
     $('an-ping-channels').value=(an.ping_channel_whitelist||[]).join(', ');
     var lkDot=document.querySelector('.an-dot[data-status="lockdown"]');
     if(lkDot){lkDot.classList.toggle('on',!!lk.enabled);lkDot.classList.toggle('off',!lk.enabled)}
+    var lkSbDot=document.querySelector('.an-sb-dot[data-an-dot="lockdown"]');
+    if(lkSbDot){lkSbDot.classList.toggle('on',!!lk.enabled);lkSbDot.classList.toggle('off',!lk.enabled)}
 
     window._anWlIds=an.whitelist||[];
     window._anWlUserInfo=d.user_info||{};
