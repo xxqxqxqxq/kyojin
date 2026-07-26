@@ -126,11 +126,14 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .punish-btn.danger.active{background:rgba(239,68,68,.12);color:#ef4444}
 
 /* WHITELIST */
-.wl-user{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(168,216,234,.05);border-radius:6px;font-size:11px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;margin-bottom:4px;transition:all .15s}
-.wl-user:hover{border-color:rgba(168,216,234,.1);background:rgba(0,0,0,.3)}
-.wl-user .uid{flex:1}
-.wl-user .remove{cursor:pointer;color:rgba(239,68,68,.35);transition:all .15s;font-size:14px;padding:2px 5px;border-radius:4px;line-height:1}
-.wl-user .remove:hover{color:#ef4444;background:rgba(239,68,68,.08)}
+.wl-user{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(6,6,10,.5);border:1px solid rgba(168,216,234,.08);border-radius:12px;margin-bottom:6px;transition:all .15s}
+.wl-user:hover{border-color:rgba(168,216,234,.18);background:rgba(6,6,10,.7)}
+.wl-user-avatar{width:32px;height:32px;border-radius:50%;border:1px solid rgba(168,216,234,.12);object-fit:cover;flex-shrink:0}
+.wl-user-info{flex:1;min-width:0}
+.wl-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wl-user-id{font-size:9px;color:rgba(168,216,234,.35);font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+.wl-user .remove{cursor:pointer;color:rgba(239,68,68,.35);transition:all .15s;font-size:14px;padding:4px 6px;border-radius:6px;line-height:1;flex-shrink:0}
+.wl-user .remove:hover{color:#ef4444;background:rgba(239,68,68,.1)}
 .wl-empty{font-size:11px;color:rgba(255,255,255,.08);padding:12px 0;font-style:italic;text-align:center}
 
 /* GIF PREVIEW */
@@ -613,10 +616,17 @@ function previewGif(inputId,imgId){var url=$(inputId).value.trim();var img=$(img
 
 $('s-prefix').addEventListener('change',function(){save('prefix',this.value||',')});
 
-function renderWl(id,users){
+function renderWl(id,users,userInfo){
   var c=$(id);
   if(!users||!users.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
-  c.innerHTML=users.map(function(uid){return '<div class="wl-user"><span class="uid">'+uid+'</span><span class="remove" data-uid="'+uid+'">&times;</span></div>'}).join('');
+  userInfo=userInfo||{};
+  c.innerHTML=users.map(function(uid){
+    var u=userInfo[uid];
+    if(u){
+      return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+    }
+    return '<div class="wl-user"><div class="wl-user-info"><div class="wl-user-name">Unknown User</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+  }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeWl(this.getAttribute('data-uid'))})});
 }
 async function addWl(type){
@@ -630,10 +640,17 @@ async function removeWl(uid){
 $('wl-add-std-btn').addEventListener('click',function(){addWl('standard')});
 $('wl-add-leg-btn').addEventListener('click',function(){addWl('legacy')});
 
-function renderBl(ids){
+function renderBl(ids,userInfo){
   var c=$('bl-list');
   if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users blacklisted</div>';return}
-  c.innerHTML=ids.map(function(uid){return '<div class="wl-user"><span class="uid">'+uid+'</span><span class="remove" data-uid="'+uid+'">&times;</span></div>'}).join('');
+  userInfo=userInfo||{};
+  c.innerHTML=ids.map(function(uid){
+    var u=userInfo[uid];
+    if(u){
+      return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+    }
+    return '<div class="wl-user"><div class="wl-user-info"><div class="wl-user-name">Unknown User</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+  }).join('');
   $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){removeBl(this.getAttribute('data-uid'))})});
 }
 async function addBl(){
@@ -714,9 +731,9 @@ async function loadSettings(){
     $('jl-leave-gif').value=d.leave_gif||'';
     previewGif('jl-leave-gif','jl-leave-preview');
 
-    renderWl('wl-std-list',d.whitelist_standard||[]);
-    renderWl('wl-leg-list',d.whitelist_legacy||[]);
-    renderBl(d.blacklist||[]);
+    renderWl('wl-std-list',d.whitelist_standard||[],d.user_info||{});
+    renderWl('wl-leg-list',d.whitelist_legacy||[],d.user_info||{});
+    renderBl(d.blacklist||[],d.user_info||{});
   }catch(e){console.error(e)}
 }
 
