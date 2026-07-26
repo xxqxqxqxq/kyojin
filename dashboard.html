@@ -8,7 +8,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-font-smoothing:antialiased;overflow:hidden}
+body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-font-smoothing:antialiased;overflow:hidden;padding-top:56px}
 @keyframes slideUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes auroraShift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-3%,2%) scale(1.05)}100%{transform:translate(2%,-1%) scale(.98)}}
@@ -26,17 +26,20 @@ body{font-family:'Inter',sans-serif;background:#060510;color:#e0e0e0;-webkit-fon
 .aurora{position:fixed;top:-40%;left:-20%;width:140%;height:140%;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 70% 10%,rgba(168,216,234,.08) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 20% 80%,rgba(120,180,220,.06) 0%,transparent 55%),radial-gradient(ellipse 45% 40% at 90% 90%,rgba(168,216,234,.04) 0%,transparent 55%);animation:auroraShift 20s ease-in-out infinite alternate}
 canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
-.navbar{height:50px;background:rgba(6,6,10,.94);border-bottom:1px solid rgba(168,216,234,.06);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;position:relative;z-index:10}
-.nav-left{display:flex;align-items:center;gap:12px}
-.nav-icon{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(168,216,234,.15)}
-.nav-name{font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff;transition:transform .2s ease,letter-spacing .2s ease,color .2s ease;cursor:pointer}
-.nav-name:hover{transform:scale(1.08);letter-spacing:0.2em;color:#a8d8ea}
-.nav-right{display:flex;align-items:center;gap:22px}
-.nav-link{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;transition:color .2s;text-decoration:none}
-.nav-link:hover{color:#a8d8ea}
-.online-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s ease-in-out infinite}
+.navbar{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(10,12,18,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(168,216,234,.08);display:flex;align-items:center;justify-content:center;padding:0 24px;z-index:100}
+.nav-left{position:absolute;left:24px;display:flex;align-items:center;gap:12px}
+.nav-center{display:flex;align-items:center;justify-content:center;gap:8px}
+.nav-right{position:absolute;right:24px;display:flex;align-items:center;gap:16px}
+.nav-icon{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.nav-name{font-size:15px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff;transition:transform .2s ease,letter-spacing .2s ease,color .2s ease;cursor:pointer}
+.nav-name:hover{transform:scale(1.08);letter-spacing:5px;color:#a8d8ea}
+.nav-link{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;transition:all .3s ease;text-decoration:none;position:relative;display:inline-block;padding:6px 4px}
+.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:#a8d8ea;transform:scaleX(0);transition:transform .3s}
+.nav-link:hover::after, .nav-link.active::after{transform:scaleX(1)}
+.nav-link:hover, .nav-link.active{color:#ffffff;font-size:14px;letter-spacing:3px}
+.online-dot{width:8px;height:8px;border-radius:50%;background:#43b581;box-shadow:0 0 8px rgba(67,181,129,.5);animation:pulse 2s ease-in-out infinite}
 
-.layout{display:flex;height:calc(100vh - 50px);position:relative;z-index:1}
+.layout{display:flex;height:calc(100vh - 56px);position:relative;z-index:1}
 .sidebar{width:180px;background:rgba(6,6,10,.94);border-right:1px solid rgba(168,216,234,.04);padding:12px 0;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
 .sidebar-label{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(168,216,234,.18);padding:14px 16px 6px}
 .sidebar-item{padding:8px 16px;font-size:11px;color:rgba(255,255,255,.22);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;border-left:2px solid transparent;font-weight:500}
@@ -150,6 +153,23 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;background:rgba(168,216,234,.1);border:1px solid rgba(168,216,234,.2);border-radius:8px;color:#a8d8ea;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100;pointer-events:none;backdrop-filter:blur(8px)}
 .toast.show{opacity:1;transform:translateY(0)}
 
+.signout-widget{position:fixed;right:24px;bottom:24px;z-index:25;width:240px;background:rgba(6,6,10,.95);border:1px solid rgba(168,216,234,.1);border-radius:18px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:0 16px 40px rgba(0,0,0,.45)}
+.signout-avatar{width:48px;height:48px;border-radius:50%;background:rgba(168,216,234,.08);border:1px solid rgba(168,216,234,.14);object-fit:cover}
+.signout-info{flex:1;min-width:0}
+.signout-name{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:.03em;line-height:1.3}
+.signout-id{font-size:10px;color:rgba(255,255,255,.55);word-break:break-all}
+.signout-btn{width:100%;margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(168,216,234,.15);background:rgba(168,216,234,.08);color:#a8d8ea;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.signout-btn:hover{background:rgba(168,216,234,.14);border-color:rgba(168,216,234,.3)}
+.confirm-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:50}
+.confirm-overlay.active{opacity:1;pointer-events:auto}
+.confirm-card{width:min(420px,100%);background:rgba(10,10,16,.98);border:1px solid rgba(168,216,234,.14);border-radius:18px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.45);text-align:center}
+.confirm-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:14px}
+.confirm-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:22px}
+.confirm-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.confirm-action{flex:1;min-width:120px;padding:12px 14px;border-radius:12px;border:1px solid rgba(168,216,234,.15);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.confirm-action.no{background:rgba(255,255,255,.05);color:#fff}
+.confirm-action.yes{background:#a8d8ea;color:#060510;border-color:#a8d8ea}
+
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(168,216,234,.1);border-radius:2px}
@@ -173,8 +193,10 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
       <span class="nav-name">Jinn</span>
     </a>
   </div>
-  <div class="nav-right">
+  <div class="nav-center">
     <a class="nav-link" href="index.html">Home</a>
+  </div>
+  <div class="nav-right">
     <span class="nav-link" id="nav-auth">Login</span>
     <div class="online-dot"></div>
   </div>
@@ -456,6 +478,24 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
   </div>
 </div>
 
+<div class="signout-widget" id="signout-widget">
+  <img class="signout-avatar" id="signout-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar">
+  <div class="signout-info">
+    <div class="signout-name" id="signout-name">Discord User</div>
+    <div class="signout-id" id="signout-id">000000000000000000</div>
+    <button class="signout-btn" id="signout-btn" type="button">Sign Out</button>
+  </div>
+</div>
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-card">
+    <div class="confirm-title">Sign out?</div>
+    <div class="confirm-text">Are you sure you want to sign out of the dashboard?</div>
+    <div class="confirm-actions">
+      <button class="confirm-action no" id="confirm-no" type="button">No</button>
+      <button class="confirm-action yes" id="confirm-yes" type="button">Yes</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast">Saved</div>
 
 <script>
@@ -472,6 +512,7 @@ anim();
 function $(id){return document.getElementById(id)}
 function $$(sel,root){return(root||document).querySelectorAll(sel)}
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
+function updateUserSession(data){var id=(data.user_id||data.username||'Unknown').toString();var label=(typeof data.username==='string'&&!/^[0-9]+$/.test(data.username)?data.username:'Discord User');$('signout-name').textContent=label;$('signout-id').textContent=id;var parsed=parseInt(id,10);var avatarIndex=Number.isNaN(parsed)?(id.split('').reduce(function(s,c){return s+c.charCodeAt(0)},0)%5):Math.abs(parsed)%5;$('signout-avatar').src='https://cdn.discordapp.com/embed/avatars/'+avatarIndex+'.png'}
 function setToggle(el,on){if(!el)return;if(on)el.classList.add('on');else el.classList.remove('on')}
 function isOn(el){return el.classList.contains('on')}
 
@@ -481,7 +522,7 @@ function save(key,val){clearTimeout(saveTimers[key]);saveTimers[key]=setTimeout(
 let authed=false;
 async function checkAuth(){
   try{const r=await fetch('/api/session',{credentials:'include'});const d=await r.json();
-    if(d.authenticated){authed=true;$('nav-auth').textContent='Dashboard';$('nav-auth').onclick=()=>location.href='dashboard.html'}
+    if(d.authenticated){authed=true;$('nav-auth').textContent='Dashboard';$('nav-auth').onclick=()=>location.href='dashboard.html';updateUserSession(d)}
     else{window.location.href='login.html';return false}
   }catch(e){window.location.href='login.html';return false}
   return true;
@@ -608,6 +649,9 @@ $('console-run-btn').addEventListener('click',function(){
   fetch('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({command:cmd})}).then(function(r){return r.json()}).then(function(d){if(d.output)d.output.split('\n').forEach(function(l){addLine(l)});if(d.error)addLine(d.error,'error')}).catch(function(){addLine('Could not connect to server','error')});
 });
 $('console-input').addEventListener('keydown',function(e){if(e.key==='Enter')$('console-run-btn').click()});
+$('signout-btn').addEventListener('click',function(){document.getElementById('confirm-overlay').classList.add('active')});
+$('confirm-no').addEventListener('click',function(){document.getElementById('confirm-overlay').classList.remove('active')});
+$('confirm-yes').addEventListener('click',async function(){try{await fetch('/api/logout',{method:'POST',credentials:'include'});window.location.href='login.html'}catch(e){showToast('Sign out failed')}});
 
 async function loadSettings(){
   try{var r=await fetch('/api/settings',{credentials:'include'});var d=await r.json();if(d.error)return;
