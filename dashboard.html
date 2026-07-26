@@ -250,9 +250,11 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .log-detail-close:hover{background:rgba(168,216,234,.12)}
 
 /* LOG CONTROLS */
-.log-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:8px 0;margin-bottom:4px}
-.log-read-all{padding:5px 12px;border-radius:6px;border:1px solid rgba(168,216,234,.12);background:rgba(168,216,234,.06);color:rgba(168,216,234,.5);font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.log-controls{display:none}
+.log-read-all{padding:4px 10px;border-radius:6px;border:1px solid rgba(168,216,234,.12);background:rgba(168,216,234,.06);color:rgba(168,216,234,.5);font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;margin-left:auto;flex-shrink:0}
 .log-read-all:hover{background:rgba(168,216,234,.12);color:#a8d8ea;border-color:rgba(168,216,234,.25)}
+.log-head-readall{padding:4px 10px;border-radius:6px;border:1px solid rgba(168,216,234,.12);background:rgba(168,216,234,.06);color:rgba(168,216,234,.5);font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;margin-left:auto;flex-shrink:0}
+.log-head-readall:hover{background:rgba(168,216,234,.12);color:#a8d8ea;border-color:rgba(168,216,234,.25)}
 .log-entry .log-dismiss{cursor:pointer;color:rgba(239,68,68,.45);transition:all .15s;font-size:14px;padding:2px 8px;border-radius:4px;flex-shrink:0;opacity:1;font-weight:700}
 .log-entry .log-dismiss:hover{color:#ef4444;background:rgba(239,68,68,.12);transform:scale(1.15)}
 .log-entry.dismissed{display:none}
@@ -386,6 +388,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
                 <div class="an-head">
                   <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
                   <div class="an-info"><div class="an-title">Security Logs</div><div class="an-sub">Bot add attempts, command spam, unauthorized access</div></div>
+                  <button class="log-head-readall" onclick="readAllLogs('log-security')">Read All</button>
                 </div>
                 <div class="an-body">
                   <div class="log-list" id="log-security">
@@ -401,6 +404,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
                 <div class="an-head">
                   <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529665253804216502.png" alt=""></div>
                   <div class="an-info"><div class="an-title">Bot Usage Logs</div><div class="an-sub">Command execution, user interactions</div></div>
+                  <button class="log-head-readall" onclick="readAllLogs('log-botusage')">Read All</button>
                 </div>
                 <div class="an-body">
                   <div class="log-list" id="log-botusage">
@@ -416,6 +420,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
                 <div class="an-head">
                   <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
                   <div class="an-info"><div class="an-title">Regular Logs</div><div class="an-sub">Deleted messages, edited messages, server changes</div></div>
+                  <button class="log-head-readall" onclick="readAllLogs('log-regular')">Read All</button>
                 </div>
                 <div class="an-body">
                   <div class="log-list" id="log-regular">
@@ -431,6 +436,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
                 <div class="an-head">
                   <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
                   <div class="an-info"><div class="an-title">Exterminated Users</div><div class="an-sub">Hard-banned users, click &#9432; to see who banned them</div></div>
+                  <button class="log-head-readall" onclick="readAllExterminated()">Read All</button>
                 </div>
                 <div class="an-body">
                   <div class="log-list" id="log-exterminated">
@@ -937,12 +943,12 @@ $('log-bot-commands').addEventListener('click',function(){this.classList.toggle(
 $('log-antinuke').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.antinuke',isOn(this))});
 $('log-moderation').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.moderation',isOn(this))});
 $('log-audit').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.audit_change',isOn(this))});
-$('log-channel').addEventListener('change',function(){save('logging_channel_id',parseInt(this.value)||null)});
+$('log-channel').addEventListener('change',function(){save('logging_channel_id',this.value.trim()||null)});
 
-$('jl-join-ch').addEventListener('change',function(){save('join_channel_id',parseInt(this.value)||null)});
+$('jl-join-ch').addEventListener('change',function(){save('join_channel_id',this.value.trim()||null)});
 $('jl-join-msg').addEventListener('change',function(){save('join_message',this.value)});
 $('jl-join-gif').addEventListener('change',function(){save('join_gif',this.value);previewGif('jl-join-gif','jl-join-preview')});
-$('jl-leave-ch').addEventListener('change',function(){save('leave_channel_id',parseInt(this.value)||null)});
+$('jl-leave-ch').addEventListener('change',function(){save('leave_channel_id',this.value.trim()||null)});
 $('jl-leave-msg').addEventListener('change',function(){save('leave_message',this.value)});
 $('jl-leave-gif').addEventListener('change',function(){save('leave_gif',this.value);previewGif('jl-leave-gif','jl-leave-preview')});
 function previewGif(inputId,imgId){var url=$(inputId).value.trim();var img=$(imgId);if(url){img.src=url;img.style.display='block'}else{img.style.display='none'}}
@@ -1096,6 +1102,7 @@ async function loadSettings(){
     setToggle($('log-antinuke'),le.antinuke);
     setToggle($('log-moderation'),le.moderation);
     setToggle($('log-audit'),le.audit_change);
+    $('log-channel').value=d.logging_channel_id||'';
 
     $('jl-join-ch').value=d.join_channel_id||'';
     $('jl-join-msg').value=d.join_message||'';
@@ -1137,9 +1144,8 @@ function renderLogList(cid,entries,showInfo){
   if(!c)return;
   var filtered=entries.filter(function(e){return !_isDismissed(e.id||'')});
   var visible=filtered.slice(0,50);
-  var controls='<div class="log-controls"><button class="log-read-all" onclick="readAllLogs(\''+cid+'\')">Read All</button></div>';
-  if(!visible.length){c.innerHTML=controls+'<div class="wl-empty">No entries yet</div>';return}
-  c.innerHTML=controls+visible.map(function(e){
+  if(!visible.length){c.innerHTML='<div class="wl-empty">No entries yet</div>';return}
+  c.innerHTML=visible.map(function(e){
     var logId=e.id||'';
     var avatar=e.avatar||'https://cdn.discordapp.com/embed/avatars/0.png';
     var tagClass=e.type==='security'?'security':e.type==='command'?'command':'info';
@@ -1159,24 +1165,19 @@ function dismissLog(logId){
 function readAllLogs(cid){
   var container=$(cid);
   if(!container)return;
-  var entries=container.querySelectorAll('.log-entry');
-  var ids=[];
-  entries.forEach(function(el){
+  container.querySelectorAll('.log-entry').forEach(function(el){
     var id=el.id.replace('log-','');
     _dismissLog(id);
-    ids.push(id);
   });
-  fetch('/api/logs/dismiss-all',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({})}).catch(function(){});
-  container.innerHTML='<div class="log-controls"><button class="log-read-all" onclick="readAllLogs(\''+cid+'\')">Read All</button></div><div class="wl-empty">No entries yet</div>';
+  container.innerHTML='<div class="wl-empty">No entries yet</div>';
 }
 
 function renderExterminated(exts){
   var c=$('log-exterminated');
   if(!c)return;
-  var controls='<div class="log-controls"><button class="log-read-all" onclick="readAllExterminated()">Read All</button></div>';
   var visible=exts.filter(function(e){return !_isDismissed(e.id||'')});
-  if(!visible.length){c.innerHTML=controls+'<div class="wl-empty">No exterminations</div>';return}
-  c.innerHTML=controls+visible.map(function(e){
+  if(!visible.length){c.innerHTML='<div class="wl-empty">No exterminations</div>';return}
+  c.innerHTML=visible.map(function(e){
     var logId=e.id||'';
     var info=JSON.stringify({Target:e.display+' ('+e.user+')',ExterminatedBy:e.created_by_name+' ('+e.created_by+')',Reason:e.reason,Date:e.time}).replace(/'/g,'&#39;');
     var infoBtn='<span class="log-entry-info" onclick="showLogDetail(this)" data-details=\''+info+'\'>&#9432;</span>';
@@ -1192,7 +1193,7 @@ function readAllExterminated(){
     var id=el.id.replace('log-','');
     _dismissLog(id);
   });
-  container.innerHTML='<div class="log-controls"><button class="log-read-all" onclick="readAllExterminated()">Read All</button></div><div class="wl-empty">No exterminations</div>';
+  container.innerHTML='<div class="wl-empty">No exterminations</div>';
 }
 
 function showLogDetail(el){
