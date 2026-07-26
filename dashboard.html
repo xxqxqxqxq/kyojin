@@ -220,7 +220,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .log-list{max-height:500px;overflow-y:auto;padding:4px 0}
 .log-list::-webkit-scrollbar{width:3px}
 .log-list::-webkit-scrollbar-thumb{background:rgba(168,216,234,.1);border-radius:2px}
-.log-entry{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.015);transition:background .15s}
+.log-entry{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.015);transition:background .15s}
 .log-entry:hover{background:rgba(168,216,234,.02)}
 .log-entry:last-child{border-bottom:none}
 .log-entry-avatar{width:28px;height:28px;border-radius:50%;border:1px solid rgba(168,216,234,.08);object-fit:cover;flex-shrink:0}
@@ -250,12 +250,11 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .log-detail-close:hover{background:rgba(168,216,234,.12)}
 
 /* LOG CONTROLS */
-.log-controls{display:flex;align-items:center;gap:8px;padding:8px 0;margin-bottom:4px}
+.log-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:8px 0;margin-bottom:4px}
 .log-read-all{padding:5px 12px;border-radius:6px;border:1px solid rgba(168,216,234,.12);background:rgba(168,216,234,.06);color:rgba(168,216,234,.5);font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
 .log-read-all:hover{background:rgba(168,216,234,.12);color:#a8d8ea;border-color:rgba(168,216,234,.25)}
-.log-entry .log-dismiss{cursor:pointer;color:rgba(255,255,255,.1);transition:all .15s;font-size:12px;padding:2px 5px;border-radius:4px;flex-shrink:0;opacity:0}
-.log-entry:hover .log-dismiss{opacity:1}
-.log-entry .log-dismiss:hover{color:#ef4444;background:rgba(239,68,68,.08)}
+.log-entry .log-dismiss{cursor:pointer;color:rgba(239,68,68,.45);transition:all .15s;font-size:14px;padding:2px 8px;border-radius:4px;flex-shrink:0;opacity:1;font-weight:700}
+.log-entry .log-dismiss:hover{color:#ef4444;background:rgba(239,68,68,.12);transform:scale(1.15)}
 .log-entry.dismissed{display:none}
 
 /* SCROLLBAR */
@@ -374,6 +373,10 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
               <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530962162024190105.png" alt=""></div>
               <span>Regular</span>
             </div>
+            <div class="an-sidebar-item" data-an="exterminated">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
+              <span>Exterminated</span>
+            </div>
           </div>
 
           <div class="an-main">
@@ -417,6 +420,21 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
                 <div class="an-body">
                   <div class="log-list" id="log-regular">
                     <div class="wl-empty">No regular logs yet</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- EXTERMINATED -->
+            <div class="an-panel-content" data-an-content="exterminated">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Exterminated Users</div><div class="an-sub">Hard-banned users, click &#9432; to see who banned them</div></div>
+                </div>
+                <div class="an-body">
+                  <div class="log-list" id="log-exterminated">
+                    <div class="wl-empty">No exterminations</div>
                   </div>
                 </div>
               </div>
@@ -1098,7 +1116,7 @@ async function loadSettings(){
 
 var _dismissedLogs=JSON.parse(localStorage.getItem('dismissedLogs')||'{}');
 function _isDismissed(id){return !!_dismissedLogs[id]}
-function _dismissLog(id){_dismissedLogs[id]=1;localStorage.setItem('dismissedLogs',JSON.stringify(_dismissedLogs))}
+function _dismissLog(id){_dismissedLogs[id]=1;localStorage.setItem('dismissedLogs',JSON.stringify(_dismissedLogs));fetch('/api/logs/dismiss',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({id:id})}).catch(function(){})}
 
 async function loadLogs(){
   try{
@@ -1106,33 +1124,35 @@ async function loadLogs(){
     if(!r.ok)return;
     var d=await r.json();
     if(d.error)return;
+    if(d.dismissed){d.dismissed.forEach(function(id){_dismissedLogs[id]=1});localStorage.setItem('dismissedLogs',JSON.stringify(_dismissedLogs))}
     renderLogList('log-security',d.security||[],true);
     renderLogList('log-botusage',d.bot_usage||[],false);
     renderLogList('log-regular',d.regular||[],false);
+    renderExterminated(d.exterminated||[]);
   }catch(e){}
 }
 
 function renderLogList(cid,entries,showInfo){
   var c=$(cid);
   if(!c)return;
-  var filtered=entries.filter(function(e,i){return !_isDismissed(cid+'-'+i)});
+  var filtered=entries.filter(function(e){return !_isDismissed(e.id||'')});
   var visible=filtered.slice(0,50);
   var controls='<div class="log-controls"><button class="log-read-all" onclick="readAllLogs(\''+cid+'\')">Read All</button></div>';
   if(!visible.length){c.innerHTML=controls+'<div class="wl-empty">No entries yet</div>';return}
-  c.innerHTML=controls+visible.map(function(e,i){
-    var globalIdx=entries.indexOf(e);
+  c.innerHTML=controls+visible.map(function(e){
+    var logId=e.id||'';
     var avatar=e.avatar||'https://cdn.discordapp.com/embed/avatars/0.png';
     var tagClass=e.type==='security'?'security':e.type==='command'?'command':'info';
     var tagLabel=e.type==='security'?'SECURITY':e.type==='command'?'CMD':'LOG';
     var infoBtn=showInfo&&e.details?'<span class="log-entry-info" onclick="showLogDetail(this)" data-details=\''+JSON.stringify(e.details).replace(/'/g,'&#39;')+'\'>&#9432;</span>':'';
-    var dismissBtn='<span class="log-dismiss" onclick="dismissLog(\''+cid+'\','+globalIdx+')">&times;</span>';
-    return '<div class="log-entry" id="'+cid+'-entry-'+globalIdx+'"><img class="log-entry-avatar" src="'+avatar+'" alt=""><div class="log-entry-body"><div class="log-entry-header"><span class="log-entry-tag '+tagClass+'">'+tagLabel+'</span><span class="log-entry-user">'+(e.user||'System')+'</span><span class="log-entry-time">'+(e.time||'')+'</span>'+infoBtn+'</div><div class="log-entry-text">'+(e.text||'')+'</div></div>'+dismissBtn+'</div>';
+    var dismissBtn='<span class="log-dismiss" onclick="dismissLog(\''+logId+'\')">&times;</span>';
+    return '<div class="log-entry" id="log-'+logId+'"><img class="log-entry-avatar" src="'+avatar+'" alt=""><div class="log-entry-body"><div class="log-entry-header"><span class="log-entry-tag '+tagClass+'">'+tagLabel+'</span><span class="log-entry-user">'+(e.user||'System')+'</span><span class="log-entry-time">'+(e.time||'')+'</span>'+infoBtn+'</div><div class="log-entry-text">'+(e.text||'')+'</div></div>'+dismissBtn+'</div>';
   }).join('');
 }
 
-function dismissLog(cid,idx){
-  _dismissLog(cid+'-'+idx);
-  var el=$(cid+'-entry-'+idx);
+function dismissLog(logId){
+  _dismissLog(logId);
+  var el=$('log-'+logId);
   if(el)el.remove();
 }
 
@@ -1140,11 +1160,39 @@ function readAllLogs(cid){
   var container=$(cid);
   if(!container)return;
   var entries=container.querySelectorAll('.log-entry');
+  var ids=[];
   entries.forEach(function(el){
-    var id=el.id;
-    if(id)_dismissLog(id.replace('-entry-','-'));
+    var id=el.id.replace('log-','');
+    _dismissLog(id);
+    ids.push(id);
   });
+  fetch('/api/logs/dismiss-all',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({})}).catch(function(){});
   container.innerHTML='<div class="log-controls"><button class="log-read-all" onclick="readAllLogs(\''+cid+'\')">Read All</button></div><div class="wl-empty">No entries yet</div>';
+}
+
+function renderExterminated(exts){
+  var c=$('log-exterminated');
+  if(!c)return;
+  var controls='<div class="log-controls"><button class="log-read-all" onclick="readAllExterminated()">Read All</button></div>';
+  var visible=exts.filter(function(e){return !_isDismissed(e.id||'')});
+  if(!visible.length){c.innerHTML=controls+'<div class="wl-empty">No exterminations</div>';return}
+  c.innerHTML=controls+visible.map(function(e){
+    var logId=e.id||'';
+    var info=JSON.stringify({Target:e.display+' ('+e.user+')',ExterminatedBy:e.created_by_name+' ('+e.created_by+')',Reason:e.reason,Date:e.time}).replace(/'/g,'&#39;');
+    var infoBtn='<span class="log-entry-info" onclick="showLogDetail(this)" data-details=\''+info+'\'>&#9432;</span>';
+    var dismissBtn='<span class="log-dismiss" onclick="dismissLog(\''+logId+'\')">&times;</span>';
+    return '<div class="log-entry" id="log-'+logId+'"><img class="log-entry-avatar" src="'+e.avatar+'" alt=""><div class="log-entry-body"><div class="log-entry-header"><span class="log-entry-tag security">EXTERMINATED</span><span class="log-entry-user">'+(e.display||e.user)+'</span><span class="log-entry-time">'+(e.time||'')+'</span>'+infoBtn+'</div><div class="log-entry-text">Banned by '+e.created_by_name+' &mdash; '+e.reason+'</div></div>'+dismissBtn+'</div>';
+  }).join('');
+}
+
+function readAllExterminated(){
+  var container=$('log-exterminated');
+  if(!container)return;
+  container.querySelectorAll('.log-entry').forEach(function(el){
+    var id=el.id.replace('log-','');
+    _dismissLog(id);
+  });
+  container.innerHTML='<div class="log-controls"><button class="log-read-all" onclick="readAllExterminated()">Read All</button></div><div class="wl-empty">No exterminations</div>';
 }
 
 function showLogDetail(el){
@@ -1164,7 +1212,7 @@ function showLogDetail(el){
 $('log-detail-close').addEventListener('click',function(){$('log-detail-overlay').classList.remove('active')});
 $('log-detail-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')});
 
-setInterval(loadLogs,5000);
+setInterval(function(){if(authed)loadLogs()},5000);
 
 checkAuth().then(function(){
   return loadSettings();
