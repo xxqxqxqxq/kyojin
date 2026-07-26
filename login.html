@@ -212,14 +212,14 @@
 <body>
 <nav class="navbar">
   <div class="nav-left">
-    <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
+    <a href="/" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
       <img class="nav-icon" src="icon.png" alt="">
       <span class="nav-name">JINN</span>
     </a>
   </div>
   <div class="nav-center">
-    <a class="nav-link" href="index.html">Home</a>
-    <a class="nav-link active" href="login.html">Login</a>
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link active" href="/login">Login</a>
   </div>
   <div class="nav-right">
     <div class="online-dot"></div>
@@ -290,7 +290,7 @@ document.addEventListener('keydown', e => {
 
 // ===== SESSION CHECK =====
 fetch('/api/session', { credentials: 'include' }).then(r => r.json()).then(data => {
-  if (data.authenticated) window.location.href = 'dashboard.html';
+  if (data.authenticated) window.location.href = '/dashboard';
 });
 
 let pollTimer = null;
@@ -339,7 +339,7 @@ function pollApproval(id) {
         clearInterval(dotTimer);
         statusEl.textContent = 'Approved!';
         statusEl.style.color = '#4ade80';
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+        setTimeout(() => { window.location.href = '/dashboard'; }, 500);
         return;
       }
       if (d.status === 'denied') {
