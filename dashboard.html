@@ -153,13 +153,13 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;background:rgba(168,216,234,.1);border:1px solid rgba(168,216,234,.2);border-radius:8px;color:#a8d8ea;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100;pointer-events:none;backdrop-filter:blur(8px)}
 .toast.show{opacity:1;transform:translateY(0)}
 
-.signout-widget{position:fixed;left:24px;bottom:24px;z-index:25;width:240px;background:rgba(6,6,10,.95);border:1px solid rgba(168,216,234,.16);border-radius:18px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:0 18px 48px rgba(0,0,0,.5)}
-.signout-avatar{width:48px;height:48px;border-radius:50%;background:rgba(168,216,234,.08);border:1px solid rgba(168,216,234,.16);object-fit:cover;transition:transform .2s ease}
+.signout-widget{position:fixed;left:24px;bottom:24px;z-index:25;width:190px;max-width:calc(100vw - 48px);background:rgba(6,6,10,.95);border:1px solid rgba(168,216,234,.16);border-radius:18px;padding:14px;display:flex;align-items:center;gap:10px;box-shadow:0 18px 48px rgba(0,0,0,.45)}
+.signout-avatar{width:42px;height:42px;border-radius:50%;background:rgba(168,216,234,.08);border:1px solid rgba(168,216,234,.16);object-fit:cover;transition:transform .2s ease}
 .signout-widget:hover .signout-avatar{transform:scale(1.05)}
-.signout-info{flex:1;min-width:0}
-.signout-name{font-size:12px;font-weight:700;color:#a8d8ea;margin-bottom:4px;letter-spacing:.08em;line-height:1.3;text-transform:uppercase}
-.signout-meta{font-size:11px;color:#fff;line-height:1.4;word-break:break-word}
-.signout-btn{width:100%;margin-top:12px;padding:11px 14px;border-radius:14px;border:1px solid rgba(168,216,234,.15);background:rgba(168,216,234,.08);color:#a8d8ea;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
+.signout-info{flex:1;min-width:0;overflow:hidden}
+.signout-name{font-size:12px;font-weight:700;color:#a8d8ea;margin-bottom:3px;letter-spacing:.08em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.signout-meta{font-size:11px;color:#fff;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.signout-btn{width:100%;margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid rgba(168,216,234,.15);background:rgba(168,216,234,.08);color:#a8d8ea;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
 .signout-btn:hover{background:rgba(168,216,234,.16);border-color:rgba(168,216,234,.28);transform:scale(1.02)}
 .confirm-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:50}
 .confirm-overlay.active{opacity:1;pointer-events:auto}
@@ -515,7 +515,7 @@ anim();
 function $(id){return document.getElementById(id)}
 function $$(sel,root){return(root||document).querySelectorAll(sel)}
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
-function updateUserSession(data){var username=typeof data.username==='string'&&data.username?data.username:'Discord User';$('signout-name').textContent=username;$('signout-meta').textContent='Signed in';var avatarUrl=data.avatar||'';if(avatarUrl){$('signout-avatar').src=avatarUrl;return;}var id=(data.user_id||data.username||'0').toString();var parsed=parseInt(id,10);var avatarIndex=Number.isNaN(parsed)?(id.split('').reduce(function(s,c){return s+c.charCodeAt(0)},0)%5):Math.abs(parsed)%5;$('signout-avatar').src='https://cdn.discordapp.com/embed/avatars/'+avatarIndex+'.png'}
+function updateUserSession(data){var username=typeof data.username==='string'&&data.username?data.username:'Discord User';username=username.replace(/#0$/,'');$('signout-name').textContent=username;$('signout-meta').textContent='Signed in';var avatarUrl=data.avatar||'';if(avatarUrl){$('signout-avatar').src=avatarUrl;return;}var id=(data.user_id||data.username||'0').toString();var parsed=parseInt(id,10);var avatarIndex=Number.isNaN(parsed)?(id.split('').reduce(function(s,c){return s+c.charCodeAt(0)},0)%5):Math.abs(parsed)%5;$('signout-avatar').src='https://cdn.discordapp.com/embed/avatars/'+avatarIndex+'.png'}
 function setToggle(el,on){if(!el)return;if(on)el.classList.add('on');else el.classList.remove('on')}
 function isOn(el){return el.classList.contains('on')}
 
