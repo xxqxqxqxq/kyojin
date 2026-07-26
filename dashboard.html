@@ -232,6 +232,21 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .log-entry-tag.security{background:rgba(239,68,68,.1);color:rgba(239,68,68,.6);border:1px solid rgba(239,68,68,.12)}
 .log-entry-tag.command{background:rgba(168,216,234,.08);color:rgba(168,216,234,.5);border:1px solid rgba(168,216,234,.1)}
 .log-entry-tag.info{background:rgba(74,222,128,.08);color:rgba(74,222,128,.5);border:1px solid rgba(74,222,128,.1)}
+.log-entry-info{cursor:pointer;color:rgba(168,216,234,.3);transition:all .15s;font-size:12px;padding:2px 5px;border-radius:4px;flex-shrink:0}
+.log-entry-info:hover{color:#a8d8ea;background:rgba(168,216,234,.08)}
+
+/* LOG DETAIL POPUP */
+.log-detail-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:50}
+.log-detail-overlay.active{opacity:1;pointer-events:auto}
+.log-detail-card{width:min(500px,100%);background:rgba(10,10,16,.98);border:1px solid rgba(168,216,234,.18);border-radius:18px;padding:24px;box-shadow:0 28px 90px rgba(0,0,0,.55);transform:translateY(18px) scale(.98);transition:transform .25s ease,opacity .25s ease;opacity:0;max-height:70vh;overflow-y:auto}
+.log-detail-overlay.active .log-detail-card{transform:translateY(0) scale(1);opacity:1}
+.log-detail-title{font-size:14px;font-weight:700;color:#a8d8ea;margin-bottom:16px;letter-spacing:.05em}
+.log-detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.log-detail-row:last-child{border-bottom:none}
+.log-detail-label{font-size:11px;color:rgba(255,255,255,.3);font-weight:500}
+.log-detail-val{font-size:11px;color:rgba(168,216,234,.6);font-family:'JetBrains Mono',monospace;text-align:right;max-width:60%;word-break:break-all}
+.log-detail-close{width:100%;margin-top:16px;padding:10px;border-radius:10px;border:1px solid rgba(168,216,234,.15);background:rgba(168,216,234,.06);color:#a8d8ea;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.log-detail-close:hover{background:rgba(168,216,234,.12)}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:4px}
@@ -346,7 +361,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
               <span>Bot Usage</span>
             </div>
             <div class="an-sidebar-item" data-an="regular">
-              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530962162024190105.png" alt=""></div>
               <span>Regular</span>
             </div>
           </div>
@@ -575,9 +590,11 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
                   <div class="an-dot on" data-status="audit_change"></div>
                 </div>
                 <div class="an-body">
-                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
-                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
-                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                  <div class="an-row"><span class="an-label">Server Name Changes</span><div class="toggle on" data-evt="guild_update"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Role Changes</span><div class="toggle on" data-evt="role_update"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Channel Changes</span><div class="toggle on" data-evt="channel_update"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="guild_update" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="guild_update"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
                 </div>
               </div>
             </div>
@@ -714,6 +731,13 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
   </div>
 </div>
 <div class="toast" id="toast">Saved</div>
+<div class="log-detail-overlay" id="log-detail-overlay">
+  <div class="log-detail-card">
+    <div class="log-detail-title" id="log-detail-title">Details</div>
+    <div id="log-detail-body"></div>
+    <button class="log-detail-close" id="log-detail-close">Close</button>
+  </div>
+</div>
 
 <script>
 const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
@@ -1026,22 +1050,42 @@ async function loadLogs(){
     var r=await fetch('/api/logs',{credentials:'include'});
     var d=await r.json();
     if(d.error)return;
-    renderLogList('log-security',d.security||[]);
-    renderLogList('log-botusage',d.bot_usage||[]);
-    renderLogList('log-regular',d.regular||[]);
+    renderLogList('log-security',d.security||[],true);
+    renderLogList('log-botusage',d.bot_usage||[],false);
+    renderLogList('log-regular',d.regular||[],false);
   }catch(e){}
 }
 
-function renderLogList(cid,entries){
+function renderLogList(cid,entries,showInfo){
   var c=$(cid);
   if(!entries||!entries.length){c.innerHTML='<div class="wl-empty">No entries yet</div>';return}
-  c.innerHTML=entries.map(function(e){
+  c.innerHTML=entries.map(function(e,i){
     var avatar=e.avatar||'https://cdn.discordapp.com/embed/avatars/0.png';
     var tagClass=e.type==='security'?'security':e.type==='command'?'command':'info';
     var tagLabel=e.type==='security'?'SECURITY':e.type==='command'?'CMD':'LOG';
-    return '<div class="log-entry"><img class="log-entry-avatar" src="'+avatar+'" alt=""><div class="log-entry-body"><div class="log-entry-header"><span class="log-entry-tag '+tagClass+'">'+tagLabel+'</span><span class="log-entry-user">'+(e.user||'System')+'</span><span class="log-entry-time">'+(e.time||'')+'</span></div><div class="log-entry-text">'+(e.text||'')+'</div></div></div>';
+    var infoBtn=showInfo&&e.details?'<span class="log-entry-info" onclick="showLogDetail(this)" data-details=\''+JSON.stringify(e.details).replace(/'/g,'&#39;')+'\'>&#9432;</span>':'';
+    return '<div class="log-entry"><img class="log-entry-avatar" src="'+avatar+'" alt=""><div class="log-entry-body"><div class="log-entry-header"><span class="log-entry-tag '+tagClass+'">'+tagLabel+'</span><span class="log-entry-user">'+(e.user||'System')+'</span><span class="log-entry-time">'+(e.time||'')+'</span>'+infoBtn+'</div><div class="log-entry-text">'+(e.text||'')+'</div></div></div>';
   }).join('');
 }
+
+function showLogDetail(el){
+  try{
+    var details=JSON.parse(el.getAttribute('data-details'));
+    var body=$('log-detail-body');
+    var html='';
+    for(var k in details){
+      if(details.hasOwnProperty(k)){
+        html+='<div class="log-detail-row"><span class="log-detail-label">'+k+'</span><span class="log-detail-val">'+details[k]+'</span></div>';
+      }
+    }
+    body.innerHTML=html;
+    $('log-detail-overlay').classList.add('active');
+  }catch(e){}
+}
+$('log-detail-close').addEventListener('click',function(){$('log-detail-overlay').classList.remove('active')});
+$('log-detail-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')});
+
+setInterval(loadLogs,5000);
 
 checkAuth().then(function(){
   return loadSettings();
