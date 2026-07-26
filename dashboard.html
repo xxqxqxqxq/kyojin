@@ -177,6 +177,36 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .confirm-action.no{background:rgba(255,255,255,.05);color:#fff}
 .confirm-action.yes{background:#a8d8ea;color:#060510;border-color:#a8d8ea}
 
+/* ADD BUTTON */
+.console-run{transition:all .2s,transform .2s}
+.console-run:hover{transform:scale(1.08);background:rgba(168,216,234,.18);border-color:rgba(168,216,234,.3)}
+
+/* INPUT ROW - input before button */
+.input-row{display:flex;align-items:center;gap:8px}
+.input-row .input{flex:1}
+
+/* ANTI-NUKE SUBTABS - vertical sidebar within page */
+.an-layout{display:flex;gap:16px;min-height:400px}
+.an-sidebar{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
+.an-sidebar-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-size:11px;font-weight:500;color:rgba(255,255,255,.25);cursor:pointer;transition:all .15s;border:1px solid transparent;user-select:none}
+.an-sidebar-item:hover{color:rgba(255,255,255,.5);background:rgba(168,216,234,.03)}
+.an-sidebar-item.active{color:#a8d8ea;background:rgba(168,216,234,.06);border-color:rgba(168,216,234,.1)}
+.an-sidebar-item .an-sb-emoji{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(168,216,234,.06);flex-shrink:0}
+.an-sidebar-item .an-sb-emoji img{width:14px;height:14px}
+.an-sidebar-item .an-sb-dot{width:6px;height:6px;border-radius:50%;margin-left:auto;flex-shrink:0}
+.an-sidebar-item .an-sb-dot.on{background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.3)}
+.an-sidebar-item .an-sb-dot.off{background:rgba(255,255,255,.08)}
+.an-main{flex:1;min-width:0}
+.an-panel-content{display:none;animation:fadeIn .15s ease-out}
+.an-panel-content.active{display:block}
+
+/* ANTI-NUKE WHITELIST */
+.an-wl-card{border-radius:12px;background:rgba(10,10,16,.55);border:1px solid rgba(168,216,234,.04);overflow:hidden;margin-bottom:14px}
+.an-wl-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(168,216,234,.02);border-bottom:1px solid rgba(168,216,234,.04)}
+.an-wl-head .an-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);letter-spacing:.03em}
+.an-wl-body{padding:10px 18px}
+
+/* SCROLLBAR */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(168,216,234,.1);border-radius:2px}
@@ -264,143 +294,215 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 
       <!-- ANTI-NUKE -->
       <div class="panel-page" id="page-antinuke">
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-header"><span class="card-title">Global</span></div>
-          <div class="card-body">
-            <div class="row"><span class="row-label">Enabled</span><div class="toggle" id="an-enabled"><span></span></div></div>
-            <div class="row"><span class="row-label">Window (seconds)</span><input class="input" style="width:60px;text-align:center" id="an-window" value="5"></div>
-          </div>
-        </div>
-
-        <div class="cat-tabs" id="an-tabs">
-          <div class="cat-tab active" data-cat="webhook"><img src="https://cdn.discordapp.com/emojis/1530647459053703381.png" alt=""> Webhook</div>
-          <div class="cat-tab" data-cat="ping"><img src="https://cdn.discordapp.com/emojis/1530647450560368811.png" alt=""> Ping</div>
-          <div class="cat-tab" data-cat="channels"><img src="https://cdn.discordapp.com/emojis/1530647441169449122.png" alt=""> Channels</div>
-          <div class="cat-tab" data-cat="roles"><img src="https://cdn.discordapp.com/emojis/1530647432214614026.png" alt=""> Roles</div>
-          <div class="cat-tab" data-cat="bans"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""> Bans</div>
-          <div class="cat-tab" data-cat="kicks"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""> Kicks</div>
-          <div class="cat-tab" data-cat="audit"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""> Audit</div>
-          <div class="cat-tab" data-cat="lockdown"><img src="https://cdn.discordapp.com/emojis/1530647416561209444.png" alt=""> Lockdown</div>
-        </div>
-
-        <div class="cat-content active" data-cat="webhook">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647459053703381.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Webhook Protection</div><div class="an-sub">Detects mass webhook creation</div></div>
-              <div class="an-dot on" data-status="webhook_create"></div>
+        <div class="an-layout">
+          <div class="an-sidebar" id="an-sidebar">
+            <div class="an-sidebar-item active" data-an="global">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
+              <span>Global</span>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="webhook_create"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="webhook_create" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+            <div class="an-sidebar-item" data-an="webhook">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647459053703381.png" alt=""></div>
+              <span>Webhook</span>
+              <div class="an-sb-dot on" data-an-dot="webhook_create"></div>
             </div>
-          </div>
-        </div>
-
-        <div class="cat-content" data-cat="ping">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647450560368811.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Ping Protection</div><div class="an-sub">Detects mass mentions and @everyone</div></div>
-              <div class="an-dot on" data-status="mass_ping"></div>
+            <div class="an-sidebar-item" data-an="ping">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647450560368811.png" alt=""></div>
+              <span>Ping</span>
+              <div class="an-sb-dot on" data-an-dot="mass_ping"></div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="mass_ping"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="mass_ping" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
-              <div class="an-row"><span class="an-label">Channel Whitelist</span><input class="input" style="width:170px" id="an-ping-channels" placeholder="Channel IDs, comma separated"></div>
+            <div class="an-sidebar-item" data-an="channels">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647441169449122.png" alt=""></div>
+              <span>Channels</span>
+              <div class="an-sb-dot on" data-an-dot="channel_delete"></div>
             </div>
-          </div>
-        </div>
-
-        <div class="cat-content" data-cat="channels">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647441169449122.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Channel Protection</div><div class="an-sub">Detects mass channel deletion</div></div>
-              <div class="an-dot on" data-status="channel_delete"></div>
+            <div class="an-sidebar-item" data-an="roles">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647432214614026.png" alt=""></div>
+              <span>Roles</span>
+              <div class="an-sb-dot on" data-an-dot="role_delete"></div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="channel_delete"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="channel_delete" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+            <div class="an-sidebar-item" data-an="bans">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
+              <span>Bans</span>
+              <div class="an-sb-dot on" data-an-dot="ban"></div>
+            </div>
+            <div class="an-sidebar-item" data-an="kicks">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
+              <span>Kicks</span>
+              <div class="an-sb-dot on" data-an-dot="kick"></div>
+            </div>
+            <div class="an-sidebar-item" data-an="audit">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
+              <span>Audit</span>
+              <div class="an-sb-dot on" data-an-dot="audit_change"></div>
+            </div>
+            <div class="an-sidebar-item" data-an="lockdown">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1530647416561209444.png" alt=""></div>
+              <span>Lockdown</span>
+              <div class="an-sb-dot off" data-an-dot="lockdown"></div>
+            </div>
+            <div class="an-sidebar-item" data-an="whitelist">
+              <div class="an-sb-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
+              <span>Whitelist</span>
             </div>
           </div>
-        </div>
 
-        <div class="cat-content" data-cat="roles">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647432214614026.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Role Protection</div><div class="an-sub">Detects mass role deletion</div></div>
-              <div class="an-dot on" data-status="role_delete"></div>
+          <div class="an-main">
+            <!-- GLOBAL -->
+            <div class="an-panel-content active" data-an-content="global">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1529617120210714624.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Global Settings</div><div class="an-sub">Master switch and timing for all protections</div></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle" id="an-enabled"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Window (seconds)</span><input class="input" style="width:60px;text-align:center" id="an-window" value="5"></div>
+                </div>
+              </div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="role_delete"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="role_delete" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="cat-content" data-cat="bans">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Ban Protection</div><div class="an-sub">Detects mass bans</div></div>
-              <div class="an-dot on" data-status="ban"></div>
+            <!-- WEBHOOK -->
+            <div class="an-panel-content" data-an-content="webhook">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647459053703381.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Webhook Protection</div><div class="an-sub">Detects mass webhook creation</div></div>
+                  <div class="an-dot on" data-status="webhook_create"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="webhook_create"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="webhook_create" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="webhook_create"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                </div>
+              </div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="ban"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="ban" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="cat-content" data-cat="kicks">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Kick Protection</div><div class="an-sub">Detects mass kicks</div></div>
-              <div class="an-dot on" data-status="kick"></div>
+            <!-- PING -->
+            <div class="an-panel-content" data-an-content="ping">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647450560368811.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Ping Protection</div><div class="an-sub">Detects mass mentions and @everyone</div></div>
+                  <div class="an-dot on" data-status="mass_ping"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="mass_ping"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="mass_ping" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="mass_ping"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                  <div class="an-row"><span class="an-label">Channel Whitelist</span><input class="input" style="width:170px" id="an-ping-channels" placeholder="Channel IDs, comma separated"></div>
+                </div>
+              </div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="kick"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="kick" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="cat-content" data-cat="audit">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Audit Protection</div><div class="an-sub">Detects unauthorized audit log changes</div></div>
-              <div class="an-dot on" data-status="audit_change"></div>
+            <!-- CHANNELS -->
+            <div class="an-panel-content" data-an-content="channels">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647441169449122.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Channel Protection</div><div class="an-sub">Detects mass channel deletion</div></div>
+                  <div class="an-dot on" data-status="channel_delete"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="channel_delete"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="channel_delete" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="channel_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                </div>
+              </div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
-              <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="cat-content" data-cat="lockdown">
-          <div class="an-panel">
-            <div class="an-head">
-              <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647416561209444.png" alt=""></div>
-              <div class="an-info"><div class="an-title">Mass-Ban Lockdown</div><div class="an-sub">Auto-lockdown when mass bans detected</div></div>
-              <div class="an-dot off" data-status="lockdown"></div>
+            <!-- ROLES -->
+            <div class="an-panel-content" data-an-content="roles">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647432214614026.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Role Protection</div><div class="an-sub">Detects mass role deletion</div></div>
+                  <div class="an-dot on" data-status="role_delete"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="role_delete"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="role_delete" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="role_delete"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                </div>
+              </div>
             </div>
-            <div class="an-body">
-              <div class="an-row"><span class="an-label">Enabled</span><div class="toggle" id="an-lockdown"><span></span></div></div>
-              <div class="an-row"><span class="an-label">Threshold</span><input class="input" style="width:50px;text-align:center" id="an-lockdown-th" value="3"></div>
-              <div class="an-row"><span class="an-label">Access Role ID</span><input class="input" style="width:150px" id="an-lockdown-role" placeholder="Role ID"></div>
+
+            <!-- BANS -->
+            <div class="an-panel-content" data-an-content="bans">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Ban Protection</div><div class="an-sub">Detects mass bans</div></div>
+                  <div class="an-dot on" data-status="ban"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="ban"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="ban" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="ban"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                </div>
+              </div>
             </div>
+
+            <!-- KICKS -->
+            <div class="an-panel-content" data-an-content="kicks">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647425235157052.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Kick Protection</div><div class="an-sub">Detects mass kicks</div></div>
+                  <div class="an-dot on" data-status="kick"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="kick"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="kick" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="kick"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AUDIT -->
+            <div class="an-panel-content" data-an-content="audit">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647406465650799.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Audit Protection</div><div class="an-sub">Detects unauthorized audit log changes</div></div>
+                  <div class="an-dot on" data-status="audit_change"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle on" data-evt="audit_change"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input evt-input" style="width:50px;text-align:center" data-evt="audit_change" data-field="threshold" value="1"></div>
+                  <div class="an-row"><span class="an-label">Punishment</span><div class="punish-select" data-evt="audit_change"><span class="punish-btn active" data-val="strip">Strip</span><span class="punish-btn" data-val="kick">Kick</span><span class="punish-btn danger" data-val="ban">Ban</span></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LOCKDOWN -->
+            <div class="an-panel-content" data-an-content="lockdown">
+              <div class="an-panel">
+                <div class="an-head">
+                  <div class="an-emoji"><img src="https://cdn.discordapp.com/emojis/1530647416561209444.png" alt=""></div>
+                  <div class="an-info"><div class="an-title">Mass-Ban Lockdown</div><div class="an-sub">Auto-lockdown when mass bans detected</div></div>
+                  <div class="an-dot off" data-status="lockdown"></div>
+                </div>
+                <div class="an-body">
+                  <div class="an-row"><span class="an-label">Enabled</span><div class="toggle" id="an-lockdown"><span></span></div></div>
+                  <div class="an-row"><span class="an-label">Threshold</span><input class="input" style="width:50px;text-align:center" id="an-lockdown-th" value="3"></div>
+                  <div class="an-row"><span class="an-label">Access Role ID</span><input class="input" style="width:150px" id="an-lockdown-role" placeholder="Role ID"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WHITELIST -->
+            <div class="an-panel-content" data-an-content="whitelist">
+              <div class="an-wl-card">
+                <div class="an-wl-head">
+                  <div class="an-title">Anti-Nuke Whitelist</div>
+                </div>
+                <div class="an-wl-body">
+                  <div class="row"><div class="input-row"><input class="input" style="width:130px" id="an-wl-add" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="an-wl-add-btn">Add</button></div></div>
+                  <div id="an-wl-list" style="padding:4px 0"></div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -411,14 +513,14 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
           <div class="card">
             <div class="card-header"><span class="card-title">Standard Whitelist</span></div>
             <div class="card-body">
-              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="wl-add-std-btn">Add</button></div>
+              <div class="row"><div class="input-row"><input class="input" style="width:130px" id="wl-add-std" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="wl-add-std-btn">Add</button></div></div>
               <div id="wl-std-list" style="padding:0 18px 4px"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-header"><span class="card-title">Legacy Whitelist</span></div>
             <div class="card-body">
-              <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="wl-add-leg-btn">Add</button></div>
+              <div class="row"><div class="input-row"><input class="input" style="width:130px" id="wl-add-leg" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="wl-add-leg-btn">Add</button></div></div>
               <div id="wl-leg-list" style="padding:0 18px 4px"></div>
             </div>
           </div>
@@ -430,7 +532,7 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
         <div class="card">
           <div class="card-header"><span class="card-title">Blacklist</span></div>
           <div class="card-body">
-            <div class="row"><span class="row-label">Add User</span><input class="input" style="width:130px" id="bl-add" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="bl-add-btn">Add</button></div>
+            <div class="row"><div class="input-row"><input class="input" style="width:130px" id="bl-add" placeholder="User ID"><button class="console-run" style="padding:6px 14px;font-size:9px" id="bl-add-btn">Add</button></div></div>
             <div id="bl-list" style="padding:0 18px 4px"></div>
           </div>
         </div>
@@ -506,6 +608,10 @@ canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 <div class="toast" id="toast">Saved</div>
 
 <script>
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+function playClick(){if(audioCtx.state==='suspended')audioCtx.resume();const t=audioCtx.currentTime;const osc=audioCtx.createOscillator();const osc2=audioCtx.createOscillator();const gain=audioCtx.createGain();const gain2=audioCtx.createGain();osc.connect(gain);osc2.connect(gain2);gain.connect(audioCtx.destination);gain2.connect(audioCtx.destination);osc.frequency.value=3500+Math.random()*500;osc.type='square';osc2.frequency.value=100+Math.random()*50;osc2.type='sine';gain.gain.setValueAtTime(0.012,t);gain.gain.exponentialRampToValueAtTime(0.001,t+0.015);gain2.gain.setValueAtTime(0.02,t);gain2.gain.exponentialRampToValueAtTime(0.001,t+0.02);osc.start(t);osc.stop(t+0.015);osc2.start(t);osc2.stop(t+0.02)}
+document.addEventListener('keydown',e=>{const tag=e.target.tagName;if(tag==='INPUT'||tag==='TEXTAREA'){if(e.key.length===1||e.key==='Backspace')playClick()}});
+
 const cvs=document.getElementById('particles'),ctx=cvs.getContext('2d');
 let W,H,parts=[],mouse={x:-9999,y:-9999};
 function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}
@@ -553,17 +659,14 @@ $$('.sidebar-item').forEach(function(el){
   });
 });
 
-$$('.cat-tabs').forEach(function(bar){
-  $$('.cat-tab',bar).forEach(function(tab){
-    tab.addEventListener('click',function(){
-      var cat=this.getAttribute('data-cat');
-      $$('.cat-tab',bar).forEach(function(t){t.classList.remove('active')});
-      this.classList.add('active');
-      var page=bar.closest('.panel-page');
-      $$('.cat-content',page).forEach(function(c){c.classList.remove('active')});
-      var target=page.querySelector('.cat-content[data-cat="'+cat+'"]');
-      if(target)target.classList.add('active');
-    });
+$$('.an-sidebar-item').forEach(function(item){
+  item.addEventListener('click',function(){
+    var cat=this.getAttribute('data-an');
+    $$('.an-sidebar-item').forEach(function(i){i.classList.remove('active')});
+    this.classList.add('active');
+    $$('.an-panel-content').forEach(function(c){c.classList.remove('active')});
+    var target=document.querySelector('.an-panel-content[data-an-content="'+cat+'"]');
+    if(target)target.classList.add('active');
   });
 });
 
@@ -599,6 +702,38 @@ $('an-lockdown').addEventListener('click',function(){this.classList.toggle('on')
 $('an-lockdown-th').addEventListener('change',function(){save('antinuke.massban_lockdown.threshold',parseInt(this.value)||3)});
 $('an-lockdown-role').addEventListener('change',function(){save('antinuke.massban_lockdown.access_role_id',this.value||null)});
 $('an-ping-channels').addEventListener('change',function(){save('antinuke.ping_channel_whitelist',this.value.split(',').map(function(s){return parseInt(s.trim())}).filter(Boolean))});
+
+function renderAnWl(ids,userInfo){
+  var c=$('an-wl-list');
+  if(!ids||!ids.length){c.innerHTML='<div class="wl-empty">No users whitelisted</div>';return}
+  userInfo=userInfo||{};
+  c.innerHTML=ids.map(function(uid){
+    var u=userInfo[uid];
+    if(u){
+      return '<div class="wl-user"><img class="wl-user-avatar" src="'+u.avatar+'" alt=""><div class="wl-user-info"><div class="wl-user-name">'+u.display+'</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+    }
+    return '<div class="wl-user"><div class="wl-user-info"><div class="wl-user-name">Unknown User</div><div class="wl-user-id">'+uid+'</div></div><span class="remove" data-uid="'+uid+'">&times;</span></div>';
+  }).join('');
+  $$('.remove',c).forEach(function(r){r.addEventListener('click',function(){
+    var uid=this.getAttribute('data-uid');
+    var currentIds=(window._anWlIds||[]).filter(function(id){return id!==uid});
+    window._anWlIds=currentIds;
+    save('antinuke.whitelist',currentIds);
+    renderAnWl(currentIds,userInfo);
+    showToast('Removed');
+  })});
+}
+$('an-wl-add-btn').addEventListener('click',async function(){
+  var input=$('an-wl-add');var uid=input.value.trim();if(!uid)return;
+  var currentIds=window._anWlIds||[];
+  if(currentIds.indexOf(uid)!==-1){showToast('Already whitelisted');return}
+  currentIds.push(uid);
+  window._anWlIds=currentIds;
+  save('antinuke.whitelist',currentIds);
+  input.value='';
+  renderAnWl(currentIds,window._anWlUserInfo||{});
+  showToast('Added');
+});
 
 $('log-bot-commands').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.bot_commands',isOn(this))});
 $('log-antinuke').addEventListener('click',function(){this.classList.toggle('on');save('logging_events.antinuke',isOn(this))});
@@ -670,6 +805,10 @@ $('console-run-btn').addEventListener('click',function(){
   fetch('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({command:cmd})}).then(function(r){return r.json()}).then(function(d){if(d.output)d.output.split('\n').forEach(function(l){addLine(l)});if(d.error)addLine(d.error,'error')}).catch(function(){addLine('Could not connect to server','error')});
 });
 $('console-input').addEventListener('keydown',function(e){if(e.key==='Enter')$('console-run-btn').click()});
+$('wl-add-std').addEventListener('keydown',function(e){if(e.key==='Enter')$('wl-add-std-btn').click()});
+$('wl-add-leg').addEventListener('keydown',function(e){if(e.key==='Enter')$('wl-add-leg-btn').click()});
+$('bl-add').addEventListener('keydown',function(e){if(e.key==='Enter')$('bl-add-btn').click()});
+$('an-wl-add').addEventListener('keydown',function(e){if(e.key==='Enter')$('an-wl-add-btn').click()});
 $('signout-btn').addEventListener('click',function(){document.getElementById('confirm-overlay').classList.add('active')});
 $('confirm-no').addEventListener('click',function(){document.getElementById('confirm-overlay').classList.remove('active')});
 $('confirm-yes').addEventListener('click',async function(){try{await fetch('/api/logout',{method:'POST',credentials:'include'});window.location.href='login.html'}catch(e){showToast('Sign out failed')}});
@@ -715,6 +854,10 @@ async function loadSettings(){
     $('an-ping-channels').value=(an.ping_channel_whitelist||[]).join(', ');
     var lkDot=document.querySelector('.an-dot[data-status="lockdown"]');
     if(lkDot){lkDot.classList.toggle('on',!!lk.enabled);lkDot.classList.toggle('off',!lk.enabled)}
+
+    window._anWlIds=an.whitelist||[];
+    window._anWlUserInfo=d.user_info||{};
+    renderAnWl(window._anWlIds,window._anWlUserInfo);
 
     var le=d.logging_events||{};
     setToggle($('log-bot-commands'),le.bot_commands);
